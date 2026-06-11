@@ -7,6 +7,13 @@ const toPublicMedia = (media = []) =>
     mimeType: item.mimeType,
   }));
 
+const resolveMainImage = (property) => {
+  if (property.mainImage) return property.mainImage;
+  const media = property.media || [];
+  const main = media.find((m) => m.isMain);
+  return main?.url || media[0]?.url || null;
+};
+
 const toListLocation = (location = {}) => ({
   city: location.city || '',
   state: location.state || null,
@@ -35,7 +42,8 @@ const toPropertyListCard = (property) => ({
   area: property.area ?? { value: null, unit: 'sqft' },
   furnishing: property.furnishing ?? null,
   location: toListLocation(property.location),
-  mainImage: property.mainImage ?? null,
+  media: toPublicMedia(property.media),
+  mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
 });
 
@@ -70,7 +78,7 @@ const toPropertyDetail = (property) => ({
   saleDetails: property.saleDetails ?? null,
   location: toDetailLocation(property.location),
   media: toPublicMedia(property.media),
-  mainImage: property.mainImage ?? null,
+  mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
   createdAt: property.createdAt,
   updatedAt: property.updatedAt,

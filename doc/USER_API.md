@@ -116,7 +116,7 @@ Returns paginated property cards. Only **active** listings are included.
 
 Each item in `data[]` contains:
 
-`_id`, `listingId`, `listingType`, `propertyType`, `title`, `price`, `maintenance`, `bedrooms`, `bathrooms`, `area`, `furnishing`, `location` (city/state/pincode only), `mainImage`, `publishedAt`
+`_id`, `listingId`, `listingType`, `propertyType`, `title`, `price`, `maintenance`, `bedrooms`, `bathrooms`, `area`, `furnishing`, `location` (city/state/pincode only), `media[]` (all images: `_id`, `type`, `url`, `isMain`, `mimeType`), `mainImage`, `publishedAt`
 
 ### Example
 ```
@@ -146,6 +146,22 @@ GET /api/v1/user/properties?page=1&limit=12&sortBy=publishedAt&sortOrder=desc
         "state": "Maharashtra",
         "pincode": "400053"
       },
+      "media": [
+        {
+          "_id": "media001",
+          "type": "exterior",
+          "url": "http://localhost:7000/uploads/properties/6789.../media/photo.webp",
+          "isMain": true,
+          "mimeType": "image/webp"
+        },
+        {
+          "_id": "media002",
+          "type": "livingRoom",
+          "url": "http://localhost:7000/uploads/properties/6789.../media/living.webp",
+          "isMain": false,
+          "mimeType": "image/webp"
+        }
+      ],
       "mainImage": "http://localhost:7000/uploads/properties/6789.../media/photo.webp",
       "publishedAt": "2026-06-01T10:00:00.000Z"
     }
