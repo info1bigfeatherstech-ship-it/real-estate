@@ -209,6 +209,10 @@ propertySchema.index({ title: 'text', 'location.city': 'text', 'location.fullAdd
 propertySchema.index({ listingType: 1, propertyType: 1, status: 1, isDeleted: 1 });
 propertySchema.index({ 'location.city': 1, 'location.state': 1 });
 propertySchema.index({ createdAt: -1 });
+propertySchema.index({ status: 1, isDeleted: 1, publishedAt: -1 });
+propertySchema.index({ status: 1, isDeleted: 1, listingType: 1, propertyType: 1, price: 1 });
+propertySchema.index({ status: 1, isDeleted: 1, 'location.city': 1, 'location.state': 1, price: 1 });
+propertySchema.index({ status: 1, isDeleted: 1, bedrooms: 1, price: 1 });
 
 propertySchema.virtual('mainImage').get(function mainImage() {
   const main = this.media?.find((m) => m.isMain);

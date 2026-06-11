@@ -1,12 +1,8 @@
 const express = require('express');
+const propertyRoutes = require('./property.user.routes');
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-  res.status(501).json({
-    success: false,
-    message: 'User API endpoints are not implemented yet',
-  });
-});
+router.use('/properties', propertyRoutes);
 
 module.exports = router;
