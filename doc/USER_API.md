@@ -132,7 +132,7 @@ GET /api/v1/user/properties?page=1&limit=12&sortBy=publishedAt&sortOrder=desc
     {
       "_id": "6789abcdef1234567890abcd",
       "listingId": "EA-88231-A3F2C1",
-      "listingType": "For Sale",
+      "listingType": "For Sell",
       "propertyType": "Flat",
       "title": "Skyline 2BHK Flat",
       "price": 7500000,
@@ -217,7 +217,7 @@ Full public property view including `description`, all attributes, `rentalDetail
   "data": {
     "_id": "6789abcdef1234567890abcd",
     "listingId": "EA-88231-A3F2C1",
-    "listingType": "For Sale",
+    "listingType": "For Sell",
     "propertyType": "Flat",
     "title": "Skyline 2BHK Flat",
     "description": "Spacious 2BHK in prime location...",
@@ -287,7 +287,7 @@ GET /api/v1/user/properties/6789abcdef1234567890abcd/related?limit=6
     {
       "_id": "6789abcdef1234567890abce",
       "listingId": "EA-44102-B7D3E9",
-      "listingType": "For Sale",
+      "listingType": "For Sell",
       "propertyType": "Flat",
       "title": "Green Valley 2BHK",
       "price": 7200000,
@@ -309,8 +309,8 @@ All filters below apply to `GET /api/v1/user/properties`.
 | Param | Match | Example |
 |-------|-------|---------|
 | `search` | title, listingId, city, address (partial) | `skyline andheri` |
-| `listingType` | exact | `For Sale`, `For Rent`, `BUY`, `PG` |
-| `propertyType` | exact | `Flat`, `Villa`, `Independent House` |
+| `listingType` | exact | `For Sell`, `For Rent`, `BUY`, `PG` |
+| `propertyType` | exact | `Flat`, `Independent House` |
 | `city` | partial, case-insensitive | `Mumbai` |
 | `state` | exact | `Maharashtra` |
 | `pincode` | exact 6-digit | `400001` |
@@ -372,7 +372,7 @@ All filters below apply to `GET /api/v1/user/properties`.
 | `securityDeposit` | 1 Month Rent, 2 Months Rent, etc. |
 | `governmentEmployeePreferred` | `true` or `false` |
 
-### Sale filters (For Sale / BUY)
+### Sell filters (For Sell / BUY)
 
 | Param | Field |
 |-------|-------|
@@ -405,7 +405,7 @@ GET /api/v1/user/properties?search=skyline%20andheri
 
 ### Maharashtra villas ready to move
 ```
-GET /api/v1/user/properties?propertyType=Villa&state=Maharashtra&constructionStatus=Ready%20to%20Move
+GET /api/v1/user/properties?propertyType=Flat&state=Maharashtra&constructionStatus=Ready%20to%20Move
 ```
 
 ### Property detail (website URL)
@@ -424,8 +424,8 @@ GET /api/v1/user/properties/6789abcdef1234567890abcd/related?limit=6
 
 All valid enum values are available at `GET /api/v1/constants`. Key groups:
 
-- **listingType:** `For Sale`, `For Rent`, `BUY`, `PG`
-- **propertyType:** Flat, Villa, Independent House, Builder Floor, etc. (17 types)
+- **listingType:** `For Sell`, `For Rent`, `BUY`, `PG`
+- **propertyType:** Flat, Independent House, Builder Floor, etc.
 - **furnishing:** Unfurnished, Semi-Furnished, Fully Furnished
 - **amenities:** Lift, Gym, Swimming Pool, Club House, etc.
 - **connectivity:** Near Metro, Near Railway Station, Near Airport, etc.

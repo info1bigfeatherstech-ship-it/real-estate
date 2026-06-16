@@ -1,8 +1,8 @@
-const LISTING_TYPES = Object.freeze(['For Sale', 'For Rent', 'BUY', 'PG']);
+const LISTING_TYPES = Object.freeze(['For Sell', 'For Rent', 'BUY', 'PG']);
 
 const RENTAL_LISTING_TYPES = Object.freeze(['For Rent', 'PG']);
 
-const SALE_LISTING_TYPES = Object.freeze(['For Sale', 'BUY']);
+const SALE_LISTING_TYPES = Object.freeze(['For Sell', 'BUY']);
 
 const PROPERTY_TYPES = Object.freeze([
   'Flat',

@@ -1,4 +1,5 @@
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const { normalizeListingTypeFilter } = require('../../utils/listingType');
 
 const applyExactOrRange = (filter, field, exact, min, max) => {
   if (exact !== undefined && exact !== null) {
@@ -23,7 +24,8 @@ const buildPublicPropertyFilter = (query) => {
     isDeleted: false,
   };
 
-  if (query.listingType) filter.listingType = query.listingType;
+  const listingTypeFilter = normalizeListingTypeFilter(query.listingType);
+  if (listingTypeFilter) filter.listingType = listingTypeFilter;
   if (query.propertyType) filter.propertyType = query.propertyType;
   if (query.state) filter['location.state'] = query.state;
   if (query.pincode) filter['location.pincode'] = query.pincode;

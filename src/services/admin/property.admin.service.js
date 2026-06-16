@@ -1,6 +1,7 @@
 const Property = require('../../models/Property.model');
 const AppError = require('../../errors/AppError');
 const { parsePagination, buildPaginationMeta } = require('../../utils/pagination');
+const { normalizeListingTypeFilter } = require('../../utils/listingType');
 const propertyMediaService = require('./propertyMedia.service');
 const propertyDocumentService = require('./propertyDocument.service');
 
@@ -12,7 +13,8 @@ const populateFields = [
 const buildListFilter = ({ search, listingType, propertyType, status, city }) => {
   const filter = { isDeleted: false };
 
-  if (listingType) filter.listingType = listingType;
+  const listingTypeFilter = normalizeListingTypeFilter(listingType);
+  if (listingTypeFilter) filter.listingType = listingTypeFilter;
   if (propertyType) filter.propertyType = propertyType;
   if (status) filter.status = status;
   if (city) filter['location.city'] = new RegExp(city, 'i');

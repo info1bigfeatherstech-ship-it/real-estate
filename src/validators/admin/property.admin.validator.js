@@ -120,7 +120,7 @@ const applyListingTypeRules = (value, helpers) => {
 
   if (SALE_LISTING_TYPES.includes(listingType)) {
     if (!saleDetails) {
-      return helpers.error('any.custom', { message: 'saleDetails is required for sale listings' });
+      return helpers.error('any.custom', { message: 'saleDetails is required for sell listings' });
     }
     value.rentalDetails = null;
   }
