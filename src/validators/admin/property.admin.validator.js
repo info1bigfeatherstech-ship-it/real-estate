@@ -31,12 +31,13 @@ const {
   LOAN_AVAILABILITY,
   PROPERTY_STATUSES,
   RENTAL_LISTING_TYPES,
-  SALE_LISTING_TYPES,
+  SELL_LISTING_TYPES,
   DOCUMENT_CATEGORIES,
   MEDIA_TYPES,
 } = require('../../constants/propertyEnums');
 const { INDIAN_STATE_NAMES } = require('../../constants/indianStateCodes');
 const { assertValidDocumentTypeForCategory } = require('../../utils/documentTypeValidator');
+const { listingTypeJoi } = require('../../utils/listingType');
 
 const locationSchema = Joi.object({
   fullAddress: Joi.string().trim().max(500).allow(''),
@@ -75,7 +76,7 @@ const saleDetailsSchema = Joi.object({
 });
 
 const basePropertySchema = {
-  listingType: Joi.string().valid(...LISTING_TYPES).required(),
+  listingType: listingTypeJoi(LISTING_TYPES, { required: true }),
   propertyType: Joi.string().valid(...PROPERTY_TYPES).required(),
   title: Joi.string().trim().min(3).max(200).required(),
   description: Joi.string().trim().max(10000).allow(''),
@@ -118,7 +119,7 @@ const applyListingTypeRules = (value, helpers) => {
     value.saleDetails = null;
   }
 
-  if (SALE_LISTING_TYPES.includes(listingType)) {
+  if (SELL_LISTING_TYPES.includes(listingType)) {
     if (!saleDetails) {
       return helpers.error('any.custom', { message: 'saleDetails is required for sell listings' });
     }
@@ -134,7 +135,7 @@ const createPropertySchema = Joi.object(basePropertySchema)
 
 const updatePropertySchema = Joi.object({
   ...basePropertySchema,
-  listingType: Joi.string().valid(...LISTING_TYPES),
+  listingType: listingTypeJoi(LISTING_TYPES),
   propertyType: Joi.string().valid(...PROPERTY_TYPES),
   title: Joi.string().trim().min(3).max(200),
   price: Joi.number().min(0),
@@ -151,7 +152,7 @@ const listPropertiesQuerySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).max(100).default(10),
   search: Joi.string().trim().max(200).allow(''),
-  listingType: Joi.string().valid(...LISTING_TYPES),
+  listingType: listingTypeJoi(LISTING_TYPES),
   propertyType: Joi.string().valid(...PROPERTY_TYPES),
   status: Joi.string().valid(...PROPERTY_STATUSES),
   city: Joi.string().trim().max(100),

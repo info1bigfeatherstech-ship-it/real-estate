@@ -390,7 +390,7 @@ GET /api/v1/user/properties?page=1&limit=12&sortBy=publishedAt&sortOrder=desc
 
 ### Buy flats in Mumbai under ₹1 Cr
 ```
-GET /api/v1/user/properties?listingType=For%20Sale&propertyType=Flat&city=Mumbai&maxPrice=10000000
+GET /api/v1/user/properties?listingType=For%20Sell&propertyType=Flat&city=Mumbai&maxPrice=10000000
 ```
 
 ### Rent — 2BHK furnished with lift

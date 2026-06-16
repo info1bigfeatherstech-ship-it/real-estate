@@ -35,6 +35,7 @@ const {
   ALL_DOCUMENT_TYPES,
 } = require('../constants/propertyEnums');
 const { INDIAN_STATE_NAMES } = require('../constants/indianStateCodes');
+const { normalizeListingType } = require('../utils/listingType');
 
 const mediaSchema = new mongoose.Schema(
   {
@@ -201,8 +202,20 @@ const propertySchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform(_doc, ret) {
+        if (ret.listingType) ret.listingType = normalizeListingType(ret.listingType);
+        return ret;
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform(_doc, ret) {
+        if (ret.listingType) ret.listingType = normalizeListingType(ret.listingType);
+        return ret;
+      },
+    },
   }
 );
 
@@ -218,6 +231,12 @@ propertySchema.index({ status: 1, isDeleted: 1, bedrooms: 1, price: 1 });
 propertySchema.virtual('mainImage').get(function mainImage() {
   const main = this.media?.find((m) => m.isMain);
   return main?.url || this.media?.[0]?.url || null;
+});
+
+propertySchema.pre('save', function normalizeLegacyListingType() {
+  if (this.listingType === 'For Sale') {
+    this.listingType = 'For Sell';
+  }
 });
 
 propertySchema.pre('save', function assignListingId() {

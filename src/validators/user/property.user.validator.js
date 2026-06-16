@@ -25,6 +25,7 @@ const {
   LOAN_AVAILABILITY,
 } = require('../../constants/propertyEnums');
 const { INDIAN_STATE_NAMES } = require('../../constants/indianStateCodes');
+const { listingTypeJoi } = require('../../utils/listingType');
 
 const ARRAY_MATCH_MODES = ['any', 'all'];
 
@@ -63,7 +64,7 @@ const listPropertiesQuerySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).max(100).default(12),
   search: Joi.string().trim().max(200).allow(''),
-  listingType: Joi.string().valid(...LISTING_TYPES),
+  listingType: listingTypeJoi(LISTING_TYPES),
   propertyType: Joi.string().valid(...PROPERTY_TYPES),
   city: Joi.string().trim().max(100),
   state: Joi.string().valid(...INDIAN_STATE_NAMES),
