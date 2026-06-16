@@ -1,3 +1,5 @@
+const { normalizeListingType } = require('../utils/listingType');
+
 const toPublicMedia = (media = []) =>
   media.map((item) => ({
     _id: item._id,
@@ -32,7 +34,7 @@ const toDetailLocation = (location = {}) => ({
 const toPropertyListCard = (property) => ({
   _id: property._id,
   listingId: property.listingId,
-  listingType: property.listingType,
+  listingType: normalizeListingType(property.listingType),
   propertyType: property.propertyType,
   title: property.title,
   price: property.price,
@@ -50,7 +52,7 @@ const toPropertyListCard = (property) => ({
 const toPropertyDetail = (property) => ({
   _id: property._id,
   listingId: property.listingId,
-  listingType: property.listingType,
+  listingType: normalizeListingType(property.listingType),
   propertyType: property.propertyType,
   title: property.title,
   description: property.description || '',

@@ -263,7 +263,7 @@ Base: `/api/v1/admin/auth`
       "inactive": 6
     },
     "listingTypeBreakdown": [
-      { "listingType": "For Sale", "count": 80 },
+      { "listingType": "For Sell", "count": 80 },
       { "listingType": "For Rent", "count": 45 },
       { "listingType": "BUY", "count": 20 },
       { "listingType": "PG", "count": 11 }
@@ -293,8 +293,8 @@ Base: `/api/v1/admin/properties`
 | `page` | number | 1 | Page number |
 | `limit` | number | 10 | Items per page (max 100) |
 | `search` | string | — | Search title, listingId, city, address |
-| `listingType` | string | — | For Sale, For Rent, BUY, PG |
-| `propertyType` | string | — | Flat, Villa, etc. |
+| `listingType` | string | — | For Sell, For Rent, BUY, PG |
+| `propertyType` | string | — | Flat, Independent House, etc. |
 | `status` | string | — | draft, active, pending, inactive |
 | `city` | string | — | Filter by city |
 | `sortBy` | string | createdAt | createdAt, price, title, updatedAt |
@@ -302,7 +302,7 @@ Base: `/api/v1/admin/properties`
 
 **Example:**
 ```
-GET /api/v1/admin/properties?page=1&limit=10&search=skyline&listingType=For Sale&status=active&sortBy=price&sortOrder=asc
+GET /api/v1/admin/properties?page=1&limit=10&search=skyline&listingType=For Sell&status=active&sortBy=price&sortOrder=asc
 ```
 
 **Success response (200):**
@@ -314,7 +314,7 @@ GET /api/v1/admin/properties?page=1&limit=10&search=skyline&listingType=For Sale
     {
       "_id": "6789abcdef1234567890abcd",
       "listingId": "EA-88231-A3F2C1",
-      "listingType": "For Sale",
+      "listingType": "For Sell",
       "propertyType": "Flat",
       "title": "Skyline 2BHK Flat",
       "price": 7500000,
@@ -359,7 +359,7 @@ GET /api/v1/admin/properties?page=1&limit=10&search=skyline&listingType=For Sale
 | **Auth** | Bearer Token ✅ |
 | **Content-Type** | `application/json` |
 
-> Use **For Sale** dummy → [Section 9.1](#91-create-property--for-sale-all-fields)  
+> Use **For Sell** dummy → [Section 9.1](#91-create-property--for-sale-all-fields)  
 > Use **For Rent** dummy → [Section 9.2](#92-create-property--for-rent--pg-all-fields)
 
 **Success response (201):**
@@ -647,11 +647,11 @@ Deletes from cloud/local + removes from DB.
 
 ## 9. Complete Dummy Payloads
 
-### 9.1 Create Property — For Sale (ALL fields)
+### 9.1 Create Property — For Sell (ALL fields)
 
 ```json
 {
-  "listingType": "For Sale",
+  "listingType": "For Sell",
   "propertyType": "Flat",
   "title": "Skyline 2BHK Flat in Andheri East",
   "description": "Spacious 2BHK flat in a premium society with city view. Marble flooring, modular kitchen, covered parking, gym and swimming pool in society. Close to metro and schools.",
@@ -912,10 +912,10 @@ DELETE /admin/properties/:id  → soft delete + all cloud files removed
 ## 11. Enum Reference
 
 ### listingType
-`For Sale` | `For Rent` | `BUY` | `PG`
+`For Sell` | `For Rent` | `BUY` | `PG`
 
 ### propertyType
-`Flat` | `Builder Floor` | `Independent House` | `Villa` | `Penthouse` | `Farmhouse` | `Studio Apartment` | `Office Space` | `Shop` | `Showroom` | `Warehouse` | `Factory` | `Co-working Space` | `Residential Plot` | `Commercial Plot` | `Agricultural Land` | `Industrial Land`
+`Flat` | `Builder Floor` | `Independent House` | `Penthouse` | `Farmhouse` | `Studio Apartment` | `Office Space` | `Shop` | `Showroom` | `Warehouse` | `Factory` | `Co-working Space` | `Residential Plot` | `Commercial Plot` | `Agricultural Land` | `Industrial Land`
 
 ### ownershipType
 `Freehold` | `Leasehold` | `POA` | `Co-operative Society`

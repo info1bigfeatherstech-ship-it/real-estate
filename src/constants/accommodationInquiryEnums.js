@@ -31,7 +31,6 @@ const MONTHLY_BUDGETS = Object.freeze([
 const INQUIRY_PROPERTY_TYPES = Object.freeze([
   'Flat / Apartment',
   'Independent House',
-  'Villa',
   'Studio Apartment',
   'Shop',
   'Office Space',

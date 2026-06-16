@@ -1,8 +1,8 @@
-const LISTING_TYPES = Object.freeze(['For Sale', 'For Rent', 'BUY', 'PG']);
+const LISTING_TYPES = Object.freeze(['For Sell', 'For Rent', 'BUY', 'PG']);
 
 const RENTAL_LISTING_TYPES = Object.freeze(['For Rent', 'PG']);
 
-const SALE_LISTING_TYPES = Object.freeze(['For Sale', 'BUY']);
+const SELL_LISTING_TYPES = Object.freeze(['For Sell', 'BUY']);
 
 const PROPERTY_TYPES = Object.freeze([
   'Flat',
@@ -277,7 +277,9 @@ const DOCUMENT_TYPES_BY_CATEGORY = Object.freeze({
 module.exports = {
   LISTING_TYPES,
   RENTAL_LISTING_TYPES,
-  SALE_LISTING_TYPES,
+  SELL_LISTING_TYPES,
+  // @deprecated alias — use SELL_LISTING_TYPES
+  SALE_LISTING_TYPES: SELL_LISTING_TYPES,
   PROPERTY_TYPES,
   OWNERSHIP_TYPES,
   PROPERTY_CONDITIONS,
