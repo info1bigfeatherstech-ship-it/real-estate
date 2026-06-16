@@ -70,6 +70,8 @@ const buildPublicPropertyFilter = (query) => {
   if (query.pets) filter['rentalDetails.pets'] = query.pets;
   if (query.smoking) filter['rentalDetails.smoking'] = query.smoking;
   if (query.alcohol) filter['rentalDetails.alcohol'] = query.alcohol;
+  if (query.guestPolicy) filter['rentalDetails.guestPolicy'] = query.guestPolicy;
+  if (query.preferredMoveInDate) filter['rentalDetails.preferredMoveInDate'] = query.preferredMoveInDate;
   if (query.securityDeposit) filter['rentalDetails.securityDeposit'] = query.securityDeposit;
   if (query.governmentEmployeePreferred !== undefined) {
     filter['rentalDetails.governmentEmployeePreferred'] = query.governmentEmployeePreferred;

@@ -4,6 +4,7 @@ const AppError = require('../../errors/AppError');
 const env = require('../../config/env');
 const storageService = require('../storage/storage.service');
 const { buildStorageKey } = require('../../utils/storageKey');
+const { assertValidDocumentTypeForCategory } = require('../../utils/documentTypeValidator');
 
 const populateFields = [
   { path: 'createdBy', select: 'name email role' },
@@ -27,7 +28,13 @@ const assertDocumentCapacity = (property) => {
   }
 };
 
+const assertDocumentType = (category, type) => {
+  const errorMessage = assertValidDocumentTypeForCategory(category, type);
+  if (errorMessage) throw AppError.badRequest(errorMessage);
+};
+
 const uploadRawDocument = async ({ propertyId, file, category, type, userId }) => {
+  assertDocumentType(category, type);
   const property = await getPropertyOrThrow(propertyId);
   assertDocumentCapacity(property);
 
@@ -71,6 +78,10 @@ const replaceDocument = async (propertyId, documentId, { category, type }, file,
   const doc = property.documents.id(documentId);
   if (!doc) throw AppError.notFound('Document not found');
 
+  const nextCategory = category || doc.category;
+  const nextType = type || doc.type;
+  assertDocumentType(nextCategory, nextType);
+
   const extension = path.extname(file.originalname || '').toLowerCase() || '.bin';
   const storageKey = buildStorageKey({
     propertyId,
@@ -107,6 +118,10 @@ const updateDocumentMeta = async (propertyId, documentId, { category, type }, us
   const property = await getPropertyOrThrow(propertyId);
   const doc = property.documents.id(documentId);
   if (!doc) throw AppError.notFound('Document not found');
+
+  const nextCategory = category || doc.category;
+  const nextType = type || doc.type;
+  assertDocumentType(nextCategory, nextType);
 
   if (category) doc.category = category;
   if (type) doc.type = type;

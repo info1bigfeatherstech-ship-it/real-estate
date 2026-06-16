@@ -8,7 +8,6 @@ const PROPERTY_TYPES = Object.freeze([
   'Flat',
   'Builder Floor',
   'Independent House',
-  'Villa',
   'Penthouse',
   'Farmhouse',
   'Studio Apartment',
@@ -58,9 +57,9 @@ const FACING_DIRECTIONS = Object.freeze([
   'South-West',
 ]);
 
-const FLOORING_TYPES = Object.freeze(['Marble', 'Granite', 'Wooden Flooring']);
+const FLOORING_TYPES = Object.freeze(['Marble', 'Granite', 'Wooden Flooring', 'Tiles']);
 
-const WATER_SUPPLY_TYPES = Object.freeze(['Municipal Water', 'Borewell', 'Both']);
+const WATER_SUPPLY_TYPES = Object.freeze(['Municipal Water', 'Borewell', 'Both']); 
 
 const POWER_BACKUP_TYPES = Object.freeze(['No Backup', 'Full Backup']);
 
@@ -68,7 +67,6 @@ const PARKING_TYPES = Object.freeze([
   'No Parking',
   'Open Parking',
   'Covered Parking',
-  'Basement Parking',
   'Stilt Parking',
 ]);
 
@@ -146,8 +144,7 @@ const MINIMUM_STAY_DURATIONS = Object.freeze([
   '6 Months',
   '11 Months',
   '1 Year',
-  '2 Years',
-  'No Minimum',
+  '2 Years'
 ]);
 
 const LOCK_IN_PERIODS = Object.freeze([
@@ -171,7 +168,11 @@ const FOOD_PREFERENCES = Object.freeze([
   'No Restriction',
 ]);
 
-const POLICY_OPTIONS = Object.freeze(['Allowed', 'Not Allowed', 'Restricted']);
+const ALLOWANCE_POLICY_OPTIONS = Object.freeze(['Allowed', 'Not Allowed']);
+
+const GUEST_POLICY_OPTIONS = Object.freeze(['Allowed', 'Not Allowed', 'Restricted']);
+
+const POLICY_OPTIONS = GUEST_POLICY_OPTIONS;
 
 const TENANT_VERIFICATION = Object.freeze([
   'Aadhaar',
@@ -188,6 +189,7 @@ const SECURITY_DEPOSIT_OPTIONS = Object.freeze([
   '3 Months Rent',
   'Custom Amount',
 ]);
+
 
 const POSSESSION_STATUSES = Object.freeze([
   'Immediate Possession',
@@ -264,6 +266,14 @@ const ALL_DOCUMENT_TYPES = Object.freeze([
   ...LEGAL_DOCUMENT_TYPES,
 ]);
 
+const DOCUMENT_TYPES_BY_CATEGORY = Object.freeze({
+  identity: IDENTITY_DOCUMENT_TYPES,
+  ownership: OWNERSHIP_DOCUMENT_TYPES,
+  approval: APPROVAL_DOCUMENT_TYPES,
+  taxUtility: TAX_UTILITY_DOCUMENT_TYPES,
+  legal: LEGAL_DOCUMENT_TYPES,
+});
+
 module.exports = {
   LISTING_TYPES,
   RENTAL_LISTING_TYPES,
@@ -290,6 +300,8 @@ module.exports = {
   LOCK_IN_PERIODS,
   AVAILABILITY_OPTIONS,
   FOOD_PREFERENCES,
+  ALLOWANCE_POLICY_OPTIONS,
+  GUEST_POLICY_OPTIONS,
   POLICY_OPTIONS,
   TENANT_VERIFICATION,
   SECURITY_DEPOSIT_OPTIONS,
@@ -304,4 +316,5 @@ module.exports = {
   TAX_UTILITY_DOCUMENT_TYPES,
   LEGAL_DOCUMENT_TYPES,
   ALL_DOCUMENT_TYPES,
+  DOCUMENT_TYPES_BY_CATEGORY,
 };
