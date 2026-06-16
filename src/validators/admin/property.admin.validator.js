@@ -23,7 +23,8 @@ const {
   LOCK_IN_PERIODS,
   AVAILABILITY_OPTIONS,
   FOOD_PREFERENCES,
-  POLICY_OPTIONS,
+  ALLOWANCE_POLICY_OPTIONS,
+  GUEST_POLICY_OPTIONS,
   TENANT_VERIFICATION,
   SECURITY_DEPOSIT_OPTIONS,
   POSSESSION_STATUSES,
@@ -31,8 +32,11 @@ const {
   PROPERTY_STATUSES,
   RENTAL_LISTING_TYPES,
   SALE_LISTING_TYPES,
+  DOCUMENT_CATEGORIES,
+  MEDIA_TYPES,
 } = require('../../constants/propertyEnums');
 const { INDIAN_STATE_NAMES } = require('../../constants/indianStateCodes');
+const { assertValidDocumentTypeForCategory } = require('../../utils/documentTypeValidator');
 
 const locationSchema = Joi.object({
   fullAddress: Joi.string().trim().max(500).allow(''),
@@ -53,10 +57,10 @@ const rentalDetailsSchema = Joi.object({
   availability: Joi.string().valid(...AVAILABILITY_OPTIONS).allow(null),
   availabilityDate: Joi.date().iso().allow(null),
   foodPreference: Joi.string().valid(...FOOD_PREFERENCES).allow(null),
-  pets: Joi.string().valid(...POLICY_OPTIONS).allow(null),
-  smoking: Joi.string().valid(...POLICY_OPTIONS).allow(null),
-  alcohol: Joi.string().valid(...POLICY_OPTIONS).allow(null),
-  guestPolicy: Joi.string().valid(...POLICY_OPTIONS).allow(null),
+  pets: Joi.string().valid(...ALLOWANCE_POLICY_OPTIONS).allow(null),
+  smoking: Joi.string().valid(...ALLOWANCE_POLICY_OPTIONS).allow(null),
+  alcohol: Joi.string().valid(...ALLOWANCE_POLICY_OPTIONS).allow(null),
+  guestPolicy: Joi.string().valid(...GUEST_POLICY_OPTIONS).allow(null),
   tenantVerification: Joi.array().items(Joi.string().valid(...TENANT_VERIFICATION)).default([]),
   securityDeposit: Joi.string().valid(...SECURITY_DEPOSIT_OPTIONS).allow(null),
   securityDepositCustomAmount: Joi.number().min(0).allow(null),
@@ -156,27 +160,43 @@ const listPropertiesQuerySchema = Joi.object({
 });
 
 const uploadMediaSchema = Joi.object({
-  type: Joi.string()
-    .valid('exterior', 'livingRoom', 'bedroom', 'kitchen', 'bathroom', 'balcony', 'society', 'floorPlan', 'video', 'virtualTour')
-    .required(),
+  type: Joi.string().valid(...MEDIA_TYPES).required(),
   isMain: Joi.boolean().truthy('true', '1').falsy('false', '0').default(false),
 });
 
 const updateMediaMetaSchema = Joi.object({
-  type: Joi.string()
-    .valid('exterior', 'livingRoom', 'bedroom', 'kitchen', 'bathroom', 'balcony', 'society', 'floorPlan', 'video', 'virtualTour'),
+  type: Joi.string().valid(...MEDIA_TYPES),
   isMain: Joi.boolean().truthy('true', '1').falsy('false', '0'),
 }).min(1);
 
+const validateDocumentCategoryType = (value, helpers) => {
+  const category = value.category;
+  const type = value.type;
+
+  if (category && type) {
+    const errorMessage = assertValidDocumentTypeForCategory(category, type);
+    if (errorMessage) {
+      return helpers.error('any.custom', { message: errorMessage });
+    }
+  }
+
+  return value;
+};
+
 const uploadDocumentSchema = Joi.object({
-  category: Joi.string().valid('identity', 'ownership', 'approval', 'taxUtility', 'legal').required(),
+  category: Joi.string().valid(...DOCUMENT_CATEGORIES).required(),
   type: Joi.string().required(),
-});
+})
+  .custom(validateDocumentCategoryType)
+  .messages({ 'any.custom': '{{#message}}' });
 
 const updateDocumentMetaSchema = Joi.object({
-  category: Joi.string().valid('identity', 'ownership', 'approval', 'taxUtility', 'legal'),
+  category: Joi.string().valid(...DOCUMENT_CATEGORIES),
   type: Joi.string(),
-}).min(1);
+})
+  .min(1)
+  .custom(validateDocumentCategoryType)
+  .messages({ 'any.custom': '{{#message}}' });
 
 module.exports = {
   createPropertySchema,
