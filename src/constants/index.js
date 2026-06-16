@@ -1,11 +1,13 @@
 const userRoles = require('./userRoles');
 const propertyEnums = require('./propertyEnums');
 const eliteServiceEnums = require('./eliteServiceEnums');
+const accommodationInquiryEnums = require('./accommodationInquiryEnums');
 const indianStateCodes = require('./indianStateCodes');
 
 module.exports = {
   ...userRoles,
   ...propertyEnums,
   ...eliteServiceEnums,
+  ...accommodationInquiryEnums,
   ...indianStateCodes,
 };

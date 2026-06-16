@@ -13,10 +13,17 @@ const buildStorageKey = ({ propertyId, assetType, fileName, extension }) => {
   return `properties/${propertyId}/${assetType}/${safeStem}-${uniqueId}${ext}`;
 };
 
+const buildInquiryStorageKey = ({ inquiryId, assetType, fileName, extension }) => {
+  const uniqueId = crypto.randomBytes(8).toString('hex');
+  const safeStem = sanitizeFileStem(fileName);
+  const ext = extension.startsWith('.') ? extension : `.${extension}`;
+  return `inquiries/${inquiryId}/${assetType}/${safeStem}-${uniqueId}${ext}`;
+};
+
 const buildLocalPublicUrl = (storageKey) => {
   const env = require('../config/env');
   const base = env.publicApiBaseUrl || `http://localhost:${env.port}`;
   return `${base}/uploads/${storageKey}`;
 };
 
-module.exports = { buildStorageKey, buildLocalPublicUrl, sanitizeFileStem };
+module.exports = { buildStorageKey, buildInquiryStorageKey, buildLocalPublicUrl, sanitizeFileStem };
