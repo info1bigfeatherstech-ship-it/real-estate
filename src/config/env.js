@@ -40,6 +40,16 @@ const envSchema = Joi.object({
   R2_SECRET_ACCESS_KEY: Joi.string().allow('').default(''),
   R2_ENDPOINT: Joi.string().allow('').default(''),
   R2_PUBLIC_BASE_URL: Joi.string().allow('').default(''),
+  CUSTOMER_REFRESH_TOKEN_COOKIE_NAME: Joi.string().default('estate_customer_refresh_token'),
+  SMTP_HOST: Joi.string().allow('').default(''),
+  SMTP_PORT: Joi.number().port().default(587),
+  SMTP_SECURE: Joi.string().allow('').default(''),
+  SMTP_USER: Joi.string().allow('').default(''),
+  SMTP_PASS: Joi.string().allow('').default(''),
+  EMAIL_FROM: Joi.string().allow('').default(''),
+  EMAIL_USER: Joi.string().allow('').default(''),
+  EMAIL_PASSWORD: Joi.string().allow('').default(''),
+  OTP_EXPIRES_MINUTES: Joi.number().integer().positive().default(10),
 }).unknown(true);
 
 const { error, value: env } = envSchema.validate(process.env, {
@@ -64,6 +74,29 @@ const resolveTrustProxy = () => {
   if (/^\d+$/.test(normalized)) return Number.parseInt(normalized, 10);
 
   return raw;
+};
+
+const resolveEmailConfig = () => {
+  const smtpUser = String(env.SMTP_USER || env.EMAIL_USER || '').trim();
+  const smtpPass = String(env.SMTP_PASS || env.EMAIL_PASSWORD || '').trim();
+  const smtpHost =
+    String(env.SMTP_HOST || '').trim() ||
+    (smtpUser.includes('@gmail.') ? 'smtp.gmail.com' : '');
+
+  const smtpPort = env.SMTP_PORT;
+  const smtpSecure = env.SMTP_SECURE
+    ? ['true', '1', 'yes'].includes(env.SMTP_SECURE.toLowerCase())
+    : smtpPort === 465;
+
+  return {
+    enabled: Boolean(smtpHost && smtpUser && smtpPass),
+    smtpHost,
+    smtpPort,
+    smtpSecure,
+    smtpUser,
+    smtpPass,
+    from: String(env.EMAIL_FROM || smtpUser || 'noreply@mehtaestatesonline.com').trim(),
+  };
 };
 
 module.exports = {
@@ -114,6 +147,19 @@ module.exports = {
     secretAccessKey: env.R2_SECRET_ACCESS_KEY,
     endpoint: env.R2_ENDPOINT,
     publicBaseUrl: String(env.R2_PUBLIC_BASE_URL || '').trim().replace(/\/$/, ''),
+  },
+  customerCookie: {
+    refreshTokenName: env.CUSTOMER_REFRESH_TOKEN_COOKIE_NAME,
+    domain: env.COOKIE_DOMAIN || null,
+    secure: env.COOKIE_SECURE
+      ? ['true', '1', 'yes'].includes(env.COOKIE_SECURE.toLowerCase())
+      : env.NODE_ENV === 'production',
+    sameSite: env.COOKIE_SAME_SITE,
+    path: `${env.API_PREFIX}/customer/auth`,
+  },
+  email: resolveEmailConfig(),
+  otp: {
+    expiresMinutes: env.OTP_EXPIRES_MINUTES,
   },
   isProduction: env.NODE_ENV === 'production',
   isDevelopment: env.NODE_ENV === 'development',

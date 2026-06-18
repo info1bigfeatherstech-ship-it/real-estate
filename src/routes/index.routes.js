@@ -1,6 +1,7 @@
 const express = require('express');
 const adminRoutes = require('./admin/index.admin.routes');
 const userRoutes = require('./user/index.user.routes');
+const customerRoutes = require('./customer/index.customer.routes');
 const healthRoutes = require('./health.routes');
 const constants = require('../constants');
 
@@ -13,5 +14,6 @@ router.get('/constants', (_req, res) => {
 router.use('/health', healthRoutes);
 router.use('/admin', adminRoutes);
 router.use('/user', userRoutes);
+router.use('/customer', customerRoutes);
 
 module.exports = router;
