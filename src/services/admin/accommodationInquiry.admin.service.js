@@ -1,29 +1,56 @@
-const AccommodationInquiry = require('../../models/AccommodationInquiry.model');
+const Inquiry = require('../../models/Inquiry.model');
 const AppError = require('../../errors/AppError');
 const { parsePagination, buildPaginationMeta } = require('../../utils/pagination');
-const attachmentService = require('../accommodationInquiryAttachment.service');
+const attachmentService = require('../inquiryAttachment.service');
+const { toLegacyAccommodationInquiry, mapLegacyList } = require('../../mappers/inquiryLegacy.mapper');
 
-const populateFields = [{ path: 'lastStatusUpdatedBy', select: 'name email role' }];
+const FORM_TYPE = 'accommodation_requirement';
+
+const populateFields = [
+  { path: 'lastStatusUpdatedBy', select: 'name email role' },
+  { path: 'submittedBy', select: 'fullName email mobile accountType' },
+];
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-const buildListFilter = ({ search, status, requirementType, occupantType, city, monthlyBudget, moveInPriority }) => {
-  const filter = { isDeleted: false, status: { $ne: 'draft' } };
+const SORT_FIELD_MAP = {
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  submittedAt: 'submittedAt',
+  fullName: 'contact.fullName',
+  status: 'status',
+  monthlyBudget: 'payload.monthlyBudget',
+};
+
+const buildListFilter = ({
+  search,
+  status,
+  requirementType,
+  occupantType,
+  city,
+  monthlyBudget,
+  moveInPriority,
+}) => {
+  const filter = {
+    isDeleted: false,
+    status: { $ne: 'draft' },
+    formType: FORM_TYPE,
+  };
 
   if (status) filter.status = status;
-  if (requirementType) filter.requirementType = requirementType;
-  if (occupantType) filter.occupantType = occupantType;
-  if (monthlyBudget) filter.monthlyBudget = monthlyBudget;
-  if (moveInPriority) filter.moveInPriority = moveInPriority;
+  if (requirementType) filter['payload.requirementType'] = requirementType;
+  if (occupantType) filter['payload.occupantType'] = occupantType;
+  if (monthlyBudget) filter['payload.monthlyBudget'] = monthlyBudget;
+  if (moveInPriority) filter['payload.moveInPriority'] = moveInPriority;
   if (city) filter['location.city'] = new RegExp(escapeRegex(city), 'i');
 
   if (search) {
     const pattern = new RegExp(escapeRegex(search), 'i');
     filter.$or = [
-      { fullName: pattern },
-      { mobile: pattern },
-      { email: pattern },
       { inquiryRef: pattern },
+      { 'contact.fullName': pattern },
+      { 'contact.mobile': pattern },
+      { 'contact.email': pattern },
       { 'location.city': pattern },
       { 'location.area': pattern },
       { remarks: pattern },
@@ -37,36 +64,32 @@ const buildListFilter = ({ search, status, requirementType, occupantType, city, 
 const listInquiries = async (query) => {
   const { page, limit, skip } = parsePagination(query);
   const filter = buildListFilter(query);
-  const sort = { [query.sortBy]: query.sortOrder === 'asc' ? 1 : -1 };
+  const sortField = SORT_FIELD_MAP[query.sortBy] || 'createdAt';
+  const sort = { [sortField]: query.sortOrder === 'asc' ? 1 : -1 };
 
   const [inquiries, total] = await Promise.all([
-    AccommodationInquiry.find(filter)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .populate(populateFields)
-      .lean(),
-    AccommodationInquiry.countDocuments(filter),
+    Inquiry.find(filter).sort(sort).skip(skip).limit(limit).populate(populateFields).lean(),
+    Inquiry.countDocuments(filter),
   ]);
 
   return {
-    inquiries,
+    inquiries: mapLegacyList(inquiries),
     meta: buildPaginationMeta({ page, limit, total }),
   };
 };
 
 const getInquiryStats = async () => {
-  const baseFilter = { isDeleted: false, status: { $ne: 'draft' } };
+  const baseFilter = { isDeleted: false, status: { $ne: 'draft' }, formType: FORM_TYPE };
 
   const [total, statusGroups, requirementGroups] = await Promise.all([
-    AccommodationInquiry.countDocuments(baseFilter),
-    AccommodationInquiry.aggregate([
+    Inquiry.countDocuments(baseFilter),
+    Inquiry.aggregate([
       { $match: baseFilter },
       { $group: { _id: '$status', count: { $sum: 1 } } },
     ]),
-    AccommodationInquiry.aggregate([
+    Inquiry.aggregate([
       { $match: baseFilter },
-      { $group: { _id: '$requirementType', count: { $sum: 1 } } },
+      { $group: { _id: '$payload.requirementType', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]),
   ]);
@@ -93,14 +116,15 @@ const getInquiryStats = async () => {
 };
 
 const getInquiryById = async (inquiryId) => {
-  const inquiry = await AccommodationInquiry.findOne({
+  const inquiry = await Inquiry.findOne({
     _id: inquiryId,
     isDeleted: false,
     status: { $ne: 'draft' },
+    formType: FORM_TYPE,
   }).populate(populateFields);
 
   if (!inquiry) throw AppError.notFound('Accommodation inquiry not found');
-  return inquiry;
+  return toLegacyAccommodationInquiry(inquiry);
 };
 
 const updateInquiryStatus = async (inquiryId, { status, adminNotes }, userId) => {
@@ -114,32 +138,33 @@ const updateInquiryStatus = async (inquiryId, { status, adminNotes }, userId) =>
     update.adminNotes = adminNotes || null;
   }
 
-  const inquiry = await AccommodationInquiry.findOneAndUpdate(
-    { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' } },
+  const inquiry = await Inquiry.findOneAndUpdate(
+    { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' }, formType: FORM_TYPE },
     update,
     { new: true, runValidators: true }
   ).populate(populateFields);
 
   if (!inquiry) throw AppError.notFound('Accommodation inquiry not found');
-  return inquiry;
+  return toLegacyAccommodationInquiry(inquiry);
 };
 
 const updateInquiryNotes = async (inquiryId, { adminNotes }, userId) => {
-  const inquiry = await AccommodationInquiry.findOneAndUpdate(
-    { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' } },
+  const inquiry = await Inquiry.findOneAndUpdate(
+    { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' }, formType: FORM_TYPE },
     { adminNotes: adminNotes || null, lastStatusUpdatedBy: userId },
     { new: true, runValidators: true }
   ).populate(populateFields);
 
   if (!inquiry) throw AppError.notFound('Accommodation inquiry not found');
-  return inquiry;
+  return toLegacyAccommodationInquiry(inquiry);
 };
 
 const deleteInquiry = async (inquiryId, userId) => {
-  const inquiry = await AccommodationInquiry.findOne({
+  const inquiry = await Inquiry.findOne({
     _id: inquiryId,
     isDeleted: false,
     status: { $ne: 'draft' },
+    formType: FORM_TYPE,
   });
 
   if (!inquiry) throw AppError.notFound('Accommodation inquiry not found');
@@ -154,7 +179,7 @@ const deleteInquiry = async (inquiryId, userId) => {
   inquiry.lastStatusUpdatedAt = new Date();
 
   await inquiry.save();
-  return inquiry;
+  return toLegacyAccommodationInquiry(inquiry);
 };
 
 module.exports = {

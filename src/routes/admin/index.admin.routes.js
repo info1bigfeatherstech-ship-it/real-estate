@@ -4,6 +4,8 @@ const propertyRoutes = require('./property.admin.routes');
 const dashboardRoutes = require('./dashboard.admin.routes');
 const eliteServiceRoutes = require('./eliteService.admin.routes');
 const accommodationInquiryRoutes = require('./accommodationInquiry.admin.routes');
+const inquiryAdminRoutes = require('./inquiry.admin.routes');
+const customerAdminRoutes = require('./customer.admin.routes');
 const { authenticate } = require('../../middlewares/auth.middleware');
 const { requireAdmin } = require('../../middlewares/admin.middleware');
 
@@ -15,5 +17,7 @@ router.use('/dashboard', authenticate, requireAdmin, dashboardRoutes);
 router.use('/properties', authenticate, requireAdmin, propertyRoutes);
 router.use('/elite-services', authenticate, requireAdmin, eliteServiceRoutes);
 router.use('/accommodation-inquiries', authenticate, requireAdmin, accommodationInquiryRoutes);
+router.use('/inquiries', authenticate, requireAdmin, inquiryAdminRoutes);
+router.use('/customers', authenticate, requireAdmin, customerAdminRoutes);
 
 module.exports = router;

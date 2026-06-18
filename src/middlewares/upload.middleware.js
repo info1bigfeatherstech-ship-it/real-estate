@@ -5,6 +5,7 @@ const {
   MAX_INQUIRY_REFERENCE_IMAGES,
   MAX_INQUIRY_OTHER_FILES,
 } = require('../constants/accommodationInquiryEnums');
+const { MAX_INQUIRY_ATTACHMENTS } = require('../constants/inquiryEnums');
 
 const memoryStorage = multer.memoryStorage();
 
@@ -28,11 +29,22 @@ const uploadInquiryAttachments = createUploader(
   { name: 'otherFiles', maxCount: MAX_INQUIRY_OTHER_FILES },
 ]);
 
+/** Accepts any attachment field names for unified inquiry forms (buy, sell, listing). */
+const uploadFlexibleInquiryAttachments = multer({
+  storage: memoryStorage,
+  limits: {
+    fileSize: env.media.maxDocumentSizeMb * 1024 * 1024,
+    files: MAX_INQUIRY_ATTACHMENTS,
+  },
+}).any();
+
 const handleMulterError = (err, req, _res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
       const isDocumentRoute = req.originalUrl.includes('/documents');
-      const isInquiryRoute = req.originalUrl.includes('/accommodation-inquiries');
+      const isInquiryRoute =
+        req.originalUrl.includes('/accommodation-inquiries') ||
+        req.originalUrl.includes('/inquiries');
       const limitMb = isDocumentRoute || isInquiryRoute
         ? env.media.maxDocumentSizeMb
         : env.media.maxImageSizeMb;
@@ -49,4 +61,10 @@ const handleMulterError = (err, req, _res, next) => {
   return next(err);
 };
 
-module.exports = { uploadImage, uploadDocument, uploadInquiryAttachments, handleMulterError };
+module.exports = {
+  uploadImage,
+  uploadDocument,
+  uploadInquiryAttachments,
+  uploadFlexibleInquiryAttachments,
+  handleMulterError,
+};
