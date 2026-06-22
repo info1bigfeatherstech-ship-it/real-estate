@@ -1,6 +1,8 @@
 const express = require('express');
 const propertyController = require('../../controllers/admin/property.admin.controller');
 const { validate } = require('../../middlewares/validate.middleware');
+const { authenticate } = require('../../middlewares/auth.middleware');
+const { requireAdmin } = require('../../middlewares/admin.middleware');
 const {
   createPropertySchema,
   updatePropertySchema,
@@ -15,6 +17,10 @@ const { uploadImage, uploadDocument, handleMulterError } = require('../../middle
 
 const router = express.Router();
 
+// All routes require admin authentication
+router.use(authenticate, requireAdmin);
+
+// ─── Property CRUD ──────────────────────────────────────────────────────────
 router.get('/', validate(listPropertiesQuerySchema, 'query'), propertyController.listProperties);
 router.post('/', validate(createPropertySchema), propertyController.createProperty);
 router.get('/:id', propertyController.getProperty);
@@ -22,6 +28,11 @@ router.put('/:id', validate(updatePropertySchema), propertyController.updateProp
 router.patch('/:id/status', validate(updateStatusSchema), propertyController.updatePropertyStatus);
 router.delete('/:id', propertyController.deleteProperty);
 
+// ─── ✅ ADMIN APPROVAL ROUTES (NEW) ──────────────────────────────────────────
+router.patch('/:id/approve', propertyController.approveProperty);   // ← ADD THIS
+router.patch('/:id/reject', propertyController.rejectProperty);     // ← ADD THIS
+
+// ─── Media Routes ──────────────────────────────────────────────────────────
 router.post(
   '/:id/media',
   uploadImage.single('file'),
@@ -46,6 +57,7 @@ router.patch(
 
 router.delete('/:id/media/:mediaId', propertyController.deleteMedia);
 
+// ─── Document Routes ──────────────────────────────────────────────────────
 router.post(
   '/:id/documents',
   uploadDocument.single('file'),
@@ -67,6 +79,10 @@ router.patch(
   validate(updateDocumentMetaSchema),
   propertyController.updateDocumentMeta
 );
+
+// ─── ✅ ADMIN APPROVAL ROUTES (NEW) ──────────────────────────────────────────
+router.patch('/:id/approve', propertyController.approveProperty);   // ✅
+router.patch('/:id/reject', propertyController.rejectProperty);     // ✅
 
 router.delete('/:id/documents/:documentId', propertyController.deleteDocument);
 

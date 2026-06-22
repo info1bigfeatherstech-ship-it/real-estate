@@ -45,6 +45,7 @@ const uploadMedia = asyncHandler(async (req, res) => {
 
 const replaceMedia = asyncHandler(async (req, res) => {
   if (!req.file) throw AppError.badRequest('No file uploaded');
+  
   const property = await propertyService.replaceMedia(
     req.params.id,
     req.params.mediaId,
@@ -103,6 +104,27 @@ const deleteDocument = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, { message: 'Document deleted successfully', data: property });
 });
 
+// ─── Approve Property (Admin) ──────────────────────────────────────────────
+const approveProperty = asyncHandler(async (req, res) => {
+  const property = await propertyService.approveProperty(req.params.id, req.user._id);
+  return ApiResponse.success(res, {
+    message: 'Property approved and published successfully',
+    data: property,
+  });
+});
+
+// ─── Reject Property (Admin) ──────────────────────────────────────────────
+const rejectProperty = asyncHandler(async (req, res) => {
+  const { reason } = req.body;
+  const property = await propertyService.rejectProperty(req.params.id, req.user._id, reason);
+  return ApiResponse.success(res, {
+    message: 'Property rejected successfully',
+    data: property,
+  });
+});
+
+
+
 module.exports = {
   listProperties,
   getProperty,
@@ -118,4 +140,6 @@ module.exports = {
   replaceDocument,
   updateDocumentMeta,
   deleteDocument,
+  approveProperty,    // ← NEW
+  rejectProperty,     // ← NEW
 };
