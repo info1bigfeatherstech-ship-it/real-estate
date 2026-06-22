@@ -22,7 +22,7 @@ const buildTokenPayload = (customer) => ({
   sub: customer._id.toString(),
   email: customer.email,
   accountType: customer.accountType,
-  tokenType: TOKEN_TYPE,
+  tokenType: TOKEN_TYPE,   
 });
 
 const normalizeMobile = (mobile) => {
@@ -71,7 +71,6 @@ const register = async ({ fullName, email, mobile, password, accountType }) => {
     expiresAt,
     metadata: { customerId: pendingCustomer._id.toString() },
   });
-
   let emailResult;
   try {
     emailResult = await sendRegistrationOtpEmail({ to: normalizedEmail, otp });
@@ -279,6 +278,9 @@ const getProfile = async (customerId) => {
   };
 };
 
+//there no n
+
+
 const getAllowedForms = (accountType) => {
   const { FORM_ACCESS_BY_ACCOUNT_TYPE } = require('../../constants/customerAccountTypes');
   return FORM_ACCESS_BY_ACCOUNT_TYPE[accountType] || [];
@@ -295,3 +297,6 @@ module.exports = {
   getAllowedForms,
   TOKEN_TYPE,
 };
+
+
+
