@@ -3,6 +3,8 @@ const propertyEnums = require('./propertyEnums');
 const eliteServiceEnums = require('./eliteServiceEnums');
 const accommodationInquiryEnums = require('./accommodationInquiryEnums');
 const indianStateCodes = require('./indianStateCodes');
+const tenantEnums = require('./tenantEnums');
+
 
 module.exports = {
   ...userRoles,
@@ -10,4 +12,5 @@ module.exports = {
   ...eliteServiceEnums,
   ...accommodationInquiryEnums,
   ...indianStateCodes,
+   ...tenantEnums
 };
