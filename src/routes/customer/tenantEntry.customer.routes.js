@@ -2,6 +2,7 @@ const express = require('express');
 const tenantEntryController = require('../../controllers/customer/tenantEntry.customer.controller');
 const { validate } = require('../../middlewares/validate.middleware');
 const { authenticateCustomer } = require('../../middlewares/customerAuth.middleware');
+const { uploadTenantPhotos, handleMulterError } = require('../../middlewares/upload.middleware'); // ← ADD
 const {
   createTenantEntrySchema,
   updateTenantEntrySchema,
@@ -25,15 +26,19 @@ router.get(
   tenantEntryController.getTenantEntriesByProperty
 );
 
-// ─── List & Create ──────────────────────────────────────────────────────
+// ─── List ────────────────────────────────────────────────────────────────
 router.get(
   '/',
   validate(listTenantEntriesQuerySchema, 'query'),
   tenantEntryController.listTenantEntries
 );
 
+// ─── Create Tenant Entry (WITH PHOTO UPLOAD) ─────────────────────────────
 router.post(
   '/',
+  authenticateCustomer,
+  uploadTenantPhotos,        // ← ADD THIS
+  handleMulterError,         // ← ADD THIS
   validate(createTenantEntrySchema),
   tenantEntryController.createTenantEntry
 );
