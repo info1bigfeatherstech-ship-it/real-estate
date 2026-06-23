@@ -38,6 +38,7 @@ const toPropertyListCard = (property) => ({
   propertyType: property.propertyType,
   title: property.title,
   price: property.price,
+  roi: property.roi ?? null,
   maintenance: property.maintenance ?? null,
   bedrooms: property.bedrooms ?? null,
   bathrooms: property.bathrooms ?? null,

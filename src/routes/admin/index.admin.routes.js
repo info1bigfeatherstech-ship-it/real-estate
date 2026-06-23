@@ -7,6 +7,7 @@ const accommodationInquiryRoutes = require('./accommodationInquiry.admin.routes'
 const inquiryAdminRoutes = require('./inquiry.admin.routes');
 const customerAdminRoutes = require('./customer.admin.routes');
 const inventoryItemRoutes = require('./inventoryItem.admin.routes');
+const propertyViewRoutes = require('./propertyView.admin.routes');
 const { authenticate } = require('../../middlewares/auth.middleware');
 const { requireAdmin } = require('../../middlewares/admin.middleware');
 
@@ -21,5 +22,6 @@ router.use('/accommodation-inquiries', authenticate, requireAdmin, accommodation
 router.use('/inquiries', authenticate, requireAdmin, inquiryAdminRoutes);
 router.use('/customers', authenticate, requireAdmin, customerAdminRoutes);
 router.use('/inventory-items', authenticate, requireAdmin, inventoryItemRoutes);
+router.use('/views', authenticate, requireAdmin, propertyViewRoutes);
 
 module.exports = router;
