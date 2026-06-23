@@ -38,12 +38,12 @@ const uploadFlexibleInquiryAttachments = multer({
   },
 }).any();
 
-// ─── ✅ TENANT PHOTO UPLOAD (NEW) ─────────────────────────────────────────
+// ─── ✅ TENANT PHOTO UPLOAD ─────────────────────────────────────────────
 const uploadTenantPhotos = multer({
   storage: memoryStorage,
   limits: {
     fileSize: env.media.maxImageSizeMb * 1024 * 1024,
-    files: 20, // Max 20 photos
+    files: 20,
   },
 }).fields([
   { name: 'roomPhotos', maxCount: 10 },
@@ -55,8 +55,6 @@ const uploadTenantPhotos = multer({
   { name: 'exitDamagePhotos', maxCount: 10 },
   { name: 'exitMeterPhotos', maxCount: 10 },
 ]);
-
-
 
 const handleMulterError = (err, req, _res, next) => {
   if (err instanceof multer.MulterError) {
@@ -81,11 +79,12 @@ const handleMulterError = (err, req, _res, next) => {
   return next(err);
 };
 
+// ─── ✅ EXPORT ─────────────────────────────────────────────────────────────
 module.exports = {
   uploadImage,
   uploadDocument,
   uploadInquiryAttachments,
   uploadFlexibleInquiryAttachments,
-  uploadTenantPhotos,
+  uploadTenantPhotos, 
   handleMulterError,
 };
