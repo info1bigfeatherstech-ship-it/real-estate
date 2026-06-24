@@ -31,6 +31,7 @@ const toDetailLocation = (location = {}) => ({
   longitude: location.longitude ?? null,
 });
 
+// ✅ FIXED: Added status field
 const toPropertyListCard = (property) => ({
   _id: property._id,
   listingId: property.listingId,
@@ -48,8 +49,10 @@ const toPropertyListCard = (property) => ({
   media: toPublicMedia(property.media),
   mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
+  status: property.status ?? null, // ← ✅ ADDED
 });
 
+// ✅ FIXED: Added status field
 const toPropertyDetail = (property) => ({
   _id: property._id,
   listingId: property.listingId,
@@ -65,6 +68,7 @@ const toPropertyDetail = (property) => ({
   flooringType: property.flooringType ?? null,
   area: property.area ?? { value: null, unit: 'sqft' },
   price: property.price,
+  roi: property.roi ?? null,
   maintenance: property.maintenance ?? null,
   bedrooms: property.bedrooms ?? null,
   bathrooms: property.bathrooms ?? null,
@@ -83,6 +87,7 @@ const toPropertyDetail = (property) => ({
   media: toPublicMedia(property.media),
   mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
+  status: property.status ?? null, // ← ✅ ADDED
   createdAt: property.createdAt,
   updatedAt: property.updatedAt,
 });

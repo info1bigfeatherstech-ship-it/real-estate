@@ -19,7 +19,6 @@ const applyArrayFilter = (filter, field, values, mode) => {
 };
 
 const buildPublicPropertyFilter = (query) => {
-  // ✅ FIX: Show all except inactive and draft
   const filter = {
     status: { $nin: ['inactive', 'draft'] },
     isDeleted: false,
@@ -98,22 +97,24 @@ const buildPublicSort = (sortBy, sortOrder) => {
   return { [sortFieldMap[sortBy]]: direction };
 };
 
+// ✅ FIXED: Removed status: 0 from projections
 const PUBLIC_LIST_PROJECTION = {
   documents: 0,
   createdBy: 0,
   lastUpdatedBy: 0,
   deletedAt: 0,
   isDeleted: 0,
-  status: 0,
+  // status: 0 — REMOVED
 };
 
+// ✅ FIXED: Removed status: 0 from projections
 const PUBLIC_DETAIL_PROJECTION = {
   documents: 0,
   createdBy: 0,
   lastUpdatedBy: 0,
   deletedAt: 0,
   isDeleted: 0,
-  status: 0,
+  // status: 0 — REMOVED
 };
 
 module.exports = {
