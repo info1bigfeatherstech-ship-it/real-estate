@@ -261,10 +261,6 @@
 // module.exports = mongoose.model('Property', propertySchema);
 
 
-
-
-
-
 //updated 
 const mongoose = require('mongoose');
 const {
@@ -430,6 +426,21 @@ const propertySchema = new mongoose.Schema(
       min: [0, 'Price cannot be negative'],
       index: true,
     },
+    roi: {
+  type: Number,
+  min: 0,
+  max: 100,
+  default: null,
+  index: true,
+  validate: {
+    validator: function(value) {
+      // If value is not null, it must be between 0 and 100
+      if (value === null || value === undefined) return true;
+      return value >= 0 && value <= 100;
+    },
+    message: 'ROI must be between 0 and 100 percent',
+  },
+},
     maintenance: { type: Number, min: 0, default: null },
     bedrooms: { type: Number, min: 0, default: null },
     bathrooms: { type: Number, min: 0, default: null },
