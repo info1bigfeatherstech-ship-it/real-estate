@@ -19,8 +19,9 @@ const applyArrayFilter = (filter, field, values, mode) => {
 };
 
 const buildPublicPropertyFilter = (query) => {
+  // ✅ FIX: Show all except inactive and draft
   const filter = {
-    status: 'active',
+    status: { $nin: ['inactive', 'draft'] },
     isDeleted: false,
   };
 
