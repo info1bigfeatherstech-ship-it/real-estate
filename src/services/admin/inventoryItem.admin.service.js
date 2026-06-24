@@ -7,6 +7,7 @@ const { DEFAULT_INVENTORY_ITEMS } = require('../../constants/tenantEnums');
 // ─── Populate Fields ──────────────────────────────────────────────────────
 const populateFields = [
   { path: 'createdBy', select: 'name email role' },
+   { path: 'categoryId', select: 'name description' },
 ];
 
 // ─── Escape Regex ─────────────────────────────────────────────────────────

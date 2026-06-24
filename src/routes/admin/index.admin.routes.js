@@ -8,6 +8,7 @@ const accommodationInquiryRoutes = require('./accommodationInquiry.admin.routes'
 const inquiryAdminRoutes = require('./inquiry.admin.routes');
 const customerAdminRoutes = require('./customer.admin.routes');
 const inventoryItemRoutes = require('./inventoryItem.admin.routes');
+const inventoryCategoryRoutes = require('./inventoryCategory.admin.routes');
 const propertyViewRoutes = require('./propertyView.admin.routes');
 const reportRoutes = require('./report.routes');
 const generalInquiryRoutes = require('./generalInquiry.admin.routes');
@@ -26,6 +27,7 @@ router.use('/accommodation-inquiries', authenticate, requireAdmin, accommodation
 router.use('/inquiries', authenticate, requireAdmin, inquiryAdminRoutes);
 router.use('/customers', authenticate, requireAdmin, customerAdminRoutes);
 router.use('/inventory-items', authenticate, requireAdmin, inventoryItemRoutes);
+router.use('/inventory-categories', authenticate, requireAdmin, inventoryCategoryRoutes);
 router.use('/views', authenticate, requireAdmin, propertyViewRoutes);
 router.use('/reports', authenticate, requireAdmin, reportRoutes);
 router.use('/general-inquiries', authenticate, requireAdmin, generalInquiryRoutes);
