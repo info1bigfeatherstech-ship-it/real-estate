@@ -1,6 +1,6 @@
 const express = require('express');
 const propertyViewController = require('../../controllers/user/propertyView.user.controller');
-const { authenticateCustomer } = require('../../middlewares/customerAuth.middleware');
+const { authenticateCustomer , optionalAuthenticateCustomer } = require('../../middlewares/customerAuth.middleware');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
  * Track property view
  * POST /api/v1/user/properties/:id/view
  */
-router.post('/:id/view', propertyViewController.trackView);
+router.post('/:id/view', optionalAuthenticateCustomer, propertyViewController.trackView);
 
 /**
  * Get view count for a property
