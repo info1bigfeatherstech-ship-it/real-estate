@@ -10,6 +10,7 @@ const customerAdminRoutes = require('./customer.admin.routes');
 const inventoryItemRoutes = require('./inventoryItem.admin.routes');
 const propertyViewRoutes = require('./propertyView.admin.routes');
 const reportRoutes = require('./report.routes');
+const generalInquiryRoutes = require('./generalInquiry.admin.routes');
 const { authenticate } = require('../../middlewares/auth.middleware');
 const { requireAdmin } = require('../../middlewares/admin.middleware');
 
@@ -27,5 +28,7 @@ router.use('/customers', authenticate, requireAdmin, customerAdminRoutes);
 router.use('/inventory-items', authenticate, requireAdmin, inventoryItemRoutes);
 router.use('/views', authenticate, requireAdmin, propertyViewRoutes);
 router.use('/reports', authenticate, requireAdmin, reportRoutes);
+router.use('/general-inquiries', authenticate, requireAdmin, generalInquiryRoutes);
+
 
 module.exports = router;
