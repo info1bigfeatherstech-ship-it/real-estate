@@ -9,7 +9,8 @@ const {
   PUBLIC_DETAIL_PROJECTION,
 } = require('./propertyQuery.builder');
 
-const ACTIVE_PUBLIC_FILTER = { status: 'active', isDeleted: false };
+// ✅ FIX: Show all except inactive and draft
+const ACTIVE_PUBLIC_FILTER = { status: { $nin: ['inactive', 'draft'] }, isDeleted: false };
 
 const RELATED_PRICE_BAND = 0.25;
 
