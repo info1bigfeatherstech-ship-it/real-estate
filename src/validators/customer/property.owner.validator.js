@@ -87,6 +87,7 @@ const basePropertySchema = {
   }).default({ unit: 'sqft' }),
   price: Joi.number().min(0).required(),
   roi: Joi.number().min(0).max(100).allow(null),
+  fomoEnabled: Joi.boolean().default(true),
   maintenance: Joi.number().min(0).allow(null),
   bedrooms: Joi.number().integer().min(0).allow(null),
   bathrooms: Joi.number().integer().min(0).allow(null),

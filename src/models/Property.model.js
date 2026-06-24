@@ -441,6 +441,10 @@ const propertySchema = new mongoose.Schema(
     message: 'ROI must be between 0 and 100 percent',
   },
 },
+fomoEnabled: {        
+  type: Boolean,
+  default: true,      // ✅ Enabled by default
+},
     maintenance: { type: Number, min: 0, default: null },
     bedrooms: { type: Number, min: 0, default: null },
     bathrooms: { type: Number, min: 0, default: null },

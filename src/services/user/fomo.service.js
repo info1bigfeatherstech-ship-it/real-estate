@@ -9,15 +9,28 @@ const AppError = require('../../errors/AppError');
  * - Today's views
  * - Total views
  */
-const getPropertyFOMO = async (propertyId) => {
   const property = await Property.findOne({
     _id: propertyId,
     isDeleted: false,
-    status: 'active',
+    status: { $nin: ['inactive', 'draft', 'pending', 'rejected'] },
   });
 
   if (!property) {
     throw AppError.notFound('Property not found');
+  }
+
+  // ✅ If FOMO is disabled, return empty stats
+  if (property.fomoEnabled === false) {
+    return {
+      propertyId,
+      propertyTitle: property.title,
+      activeViewers: 0,
+      activeViewersMessage: null,
+      todayViews: 0,
+      todayViewsMessage: null,
+      totalViews: 0,
+      uniqueViews: 0,
+    };
   }
 
   const now = new Date();
@@ -25,31 +38,27 @@ const getPropertyFOMO = async (propertyId) => {
   const todayStart = new Date(now.setHours(0, 0, 0, 0));
 
   const [activeViewers, todayViews, totalViews, uniqueViews] = await Promise.all([
-    // Active viewers (last 30 minutes)
     PropertyView.countDocuments({
       propertyId,
       viewedAt: { $gte: thirtyMinutesAgo },
       isDeleted: false,
     }),
-    // Today's views
     PropertyView.countDocuments({
       propertyId,
       viewedAt: { $gte: todayStart },
       isDeleted: false,
     }),
-    // Total views
     PropertyView.countDocuments({
       propertyId,
       isDeleted: false,
     }),
-    // Unique viewers (by session)
     PropertyView.distinct('sessionId', {
       propertyId,
       isDeleted: false,
     }).then((sessions) => sessions.length),
   ]);
 
-  // Format message
+  // Format messages
   let activeViewersMessage = null;
   if (activeViewers > 0) {
     if (activeViewers === 1) {
