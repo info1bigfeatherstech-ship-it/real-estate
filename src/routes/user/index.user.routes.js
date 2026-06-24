@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/properties', propertyRoutes);
 router.use('/properties', propertyViewRoutes);
-router.use('/fomo', fomoRoutes);
+router.use('/fomo', fomoRoutes);            
 router.use('/elite-services', eliteServiceRoutes);
 router.use('/accommodation-inquiries', accommodationInquiryRoutes);
 

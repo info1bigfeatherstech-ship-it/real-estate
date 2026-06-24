@@ -74,6 +74,17 @@ const getInventoryItemByName = async (name) => {
 
 // ─── Create Inventory Item ────────────────────────────────────────────────
 const createInventoryItem = async (data, userId) => {
+  // ✅ Validate that category exists
+  const category = await InventoryCategory.findOne({
+    _id: data.categoryId,
+    isDeleted: false,
+    isActive: true,
+  });
+
+  if (!category) {
+    throw AppError.badRequest('Invalid category. Please select a valid category.');
+  }
+
   const existing = await getInventoryItemByName(data.name);
   if (existing) {
     throw AppError.conflict(`Inventory item "${data.name}" already exists`);
@@ -81,7 +92,8 @@ const createInventoryItem = async (data, userId) => {
 
   const item = await InventoryItem.create({
     name: data.name.trim(),
-    category: data.category || 'Other',
+    categoryId: data.categoryId,
+    categoryName: category.name, // ✅ Auto-populated
     isActive: true,
     createdBy: userId,
   });
