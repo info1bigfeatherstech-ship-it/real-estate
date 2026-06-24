@@ -9,6 +9,8 @@ const AppError = require('../../errors/AppError');
  * - Today's views
  * - Total views
  */
+
+const getPropertyFOMO = async (propertyId) => {
   const property = await Property.findOne({
     _id: propertyId,
     isDeleted: false,
@@ -88,7 +90,6 @@ const AppError = require('../../errors/AppError');
     uniqueViews,
   };
 };
-
 /**
  * Get area-wise demand
  * Example: "X seekers want PG in Patel Nagar"
