@@ -6,10 +6,11 @@ const AppError = require('../../errors/AppError');
  * Get view count for a property
  */
 const getViewCount = async (propertyId, unique = false) => {
+  // ✅ FIX: Allow all statuses except inactive, draft, pending, rejected
   const property = await Property.findOne({
     _id: propertyId,
     isDeleted: false,
-    status: 'active',
+    status: { $nin: ['inactive', 'draft', 'pending', 'rejected'] },
   });
 
   if (!property) {
@@ -33,6 +34,17 @@ const getViewCount = async (propertyId, unique = false) => {
  * Get active viewers count (last 30 minutes)
  */
 const getActiveViewersCount = async (propertyId) => {
+  // ✅ FIX: Allow all statuses except inactive, draft, pending, rejected
+  const property = await Property.findOne({
+    _id: propertyId,
+    isDeleted: false,
+    status: { $nin: ['inactive', 'draft', 'pending', 'rejected'] },
+  });
+
+  if (!property) {
+    throw AppError.notFound('Property not found');
+  }
+
   const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
 
   const count = await PropertyView.countDocuments({
@@ -48,18 +60,30 @@ const getActiveViewersCount = async (propertyId) => {
  * Get view history for a property
  */
 const getViewHistory = async (propertyId, { page = 1, limit = 20 }) => {
+  // ✅ FIX: Allow all statuses except inactive, draft, pending, rejected
+  const property = await Property.findOne({
+    _id: propertyId,
+    isDeleted: false,
+    status: { $nin: ['inactive', 'draft', 'pending', 'rejected'] },
+  });
+
+  if (!property) {
+    throw AppError.notFound('Property not found');
+  }
+
   const result = await PropertyView.getPropertyViews(propertyId, { page, limit });
   return result;
 };
 
 /**
- * Track property view (called from controller)
+ * Track property view
  */
 const trackView = async (propertyId, viewerInfo) => {
+  // ✅ FIX: Allow all statuses except inactive, draft, pending, rejected
   const property = await Property.findOne({
     _id: propertyId,
     isDeleted: false,
-    status: 'active',
+    status: { $nin: ['inactive', 'draft', 'pending', 'rejected'] },
   });
 
   if (!property) {

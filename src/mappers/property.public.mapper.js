@@ -31,7 +31,7 @@ const toDetailLocation = (location = {}) => ({
   longitude: location.longitude ?? null,
 });
 
-// ✅ FIXED: Added status field
+
 const toPropertyListCard = (property) => ({
   _id: property._id,
   listingId: property.listingId,
@@ -49,10 +49,10 @@ const toPropertyListCard = (property) => ({
   media: toPublicMedia(property.media),
   mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
-  status: property.status ?? null, // ← ✅ ADDED
+  status: property.status ?? null, 
 });
 
-// ✅ FIXED: Added status field
+
 const toPropertyDetail = (property) => ({
   _id: property._id,
   listingId: property.listingId,
@@ -87,7 +87,7 @@ const toPropertyDetail = (property) => ({
   media: toPublicMedia(property.media),
   mainImage: resolveMainImage(property),
   publishedAt: property.publishedAt ?? null,
-  status: property.status ?? null, // ← ✅ ADDED
+  status: property.status ?? null, 
   createdAt: property.createdAt,
   updatedAt: property.updatedAt,
 });
