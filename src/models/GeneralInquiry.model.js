@@ -23,8 +23,7 @@ const generalInquirySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Contact number is required'],
       trim: true,
-      maxlength: [20, 'Contact number cannot exceed 20 characters'],
-      index: true,
+      maxlength: [20, 'Contact number cannot exceed 20 characters']
     },
     email: {
       type: String,

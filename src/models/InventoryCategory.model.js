@@ -8,7 +8,6 @@ const inventoryCategorySchema = new mongoose.Schema(
       trim: true,
       unique: true,
       maxlength: [50, 'Category name cannot exceed 50 characters'],
-      index: true,
     },
     description: {
       type: String,

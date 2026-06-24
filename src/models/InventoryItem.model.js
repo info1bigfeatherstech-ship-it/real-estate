@@ -13,8 +13,7 @@ const inventoryItemSchema = new mongoose.Schema(
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'InventoryCategory',
-      required: [true, 'Category is required'],
-      index: true,
+      required: [true, 'Category is required']
     },
     // ✅ categoryName — Denormalized for quick access (auto-populated)
     categoryName: {

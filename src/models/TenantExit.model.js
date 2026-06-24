@@ -127,8 +127,7 @@ const tenantExitSchema = new mongoose.Schema(
     entryRecordId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'TenantEntry',
-      required: [true, 'Entry record is required'],
-      index: true,
+      required: [true, 'Entry record is required']
     },
 
     // ─── Auto-filled from Entry ──────────────────────────────────────────
