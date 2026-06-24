@@ -1,3 +1,4 @@
+const InventoryCategory = require('../../models/InventoryCategory.model'); // ← ✅ ADD THIS
 const InventoryItem = require('../../models/InventoryItem.model');
 const AppError = require('../../errors/AppError');
 const { parsePagination, buildPaginationMeta } = require('../../utils/pagination');
@@ -15,10 +16,11 @@ const escapeRegex = (value) => {
 };
 
 // ─── Build List Filter ────────────────────────────────────────────────────
-const buildListFilter = ({ search, category, isActive }) => {
+const buildListFilter = ({ search, categoryId, isActive }) => {
   const filter = { isDeleted: false };
 
-  if (category) filter.category = category;
+  // ✅ FIX: category → categoryId
+  if (categoryId) filter.categoryId = categoryId;
   if (isActive !== undefined && isActive !== '') {
     filter.isActive = isActive === 'true' || isActive === true;
   }
@@ -93,7 +95,7 @@ const createInventoryItem = async (data, userId) => {
   const item = await InventoryItem.create({
     name: data.name.trim(),
     categoryId: data.categoryId,
-    categoryName: category.name, // ✅ Auto-populated
+    categoryName: category.name,
     isActive: true,
     createdBy: userId,
   });
@@ -118,8 +120,18 @@ const updateInventoryItem = async (itemId, data, userId) => {
     item.name = data.name.trim();
   }
 
-  if (data.category !== undefined) {
-    item.category = data.category;
+  // ✅ FIX: Handle categoryId update
+  if (data.categoryId !== undefined) {
+    const category = await InventoryCategory.findOne({
+      _id: data.categoryId,
+      isDeleted: false,
+      isActive: true,
+    });
+    if (!category) {
+      throw AppError.badRequest('Invalid category. Please select a valid category.');
+    }
+    item.categoryId = data.categoryId;
+    item.categoryName = category.name;
   }
 
   if (data.isActive !== undefined) {
@@ -168,9 +180,21 @@ const seedDefaultInventoryItems = async (userId) => {
   for (const defaultItem of DEFAULT_INVENTORY_ITEMS) {
     const existing = await getInventoryItemByName(defaultItem.name);
     if (!existing) {
+      // ✅ FIX: Find category by name
+      const category = await InventoryCategory.findOne({
+        name: { $regex: new RegExp(`^${escapeRegex(defaultItem.category)}$`, 'i') },
+        isDeleted: false,
+      });
+
+      if (!category) {
+        console.warn(`Category "${defaultItem.category}" not found. Skipping item "${defaultItem.name}".`);
+        continue;
+      }
+
       const item = await InventoryItem.create({
         name: defaultItem.name,
-        category: defaultItem.category,
+        categoryId: category._id,
+        categoryName: category.name,
         isActive: true,
         createdBy: userId,
       });
