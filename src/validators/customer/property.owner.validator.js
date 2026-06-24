@@ -84,10 +84,10 @@ const basePropertySchema = {
   area: Joi.object({
     value: Joi.number().min(0).allow(null),
     unit: Joi.string().valid('sqft').default('sqft'),
-  }).default({ unit: 'sqft' }),
+  }),
   price: Joi.number().min(0).required(),
   roi: Joi.number().min(0).max(100).allow(null),
-  fomoEnabled: Joi.boolean().default(true),
+  fomoEnabled: Joi.boolean(),
   maintenance: Joi.number().min(0).allow(null),
   bedrooms: Joi.number().integer().min(0).allow(null),
   bathrooms: Joi.number().integer().min(0).allow(null),
@@ -96,11 +96,11 @@ const basePropertySchema = {
   waterSupply: Joi.string().valid(...WATER_SUPPLY_TYPES).allow(null),
   powerBackup: Joi.string().valid(...POWER_BACKUP_TYPES).allow(null),
   parkingType: Joi.string().valid(...PARKING_TYPES).allow(null),
-  securityFeatures: Joi.array().items(Joi.string().valid(...SECURITY_FEATURES)).default([]),
-  amenities: Joi.array().items(Joi.string().valid(...AMENITIES)).default([]),
-  connectivity: Joi.array().items(Joi.string().valid(...CONNECTIVITY)).default([]),
-  nearbyFacilities: Joi.array().items(Joi.string().valid(...NEARBY_FACILITIES)).default([]),
-  location: locationSchema.default({}),
+  securityFeatures: Joi.array().items(Joi.string().valid(...SECURITY_FEATURES)),
+  amenities: Joi.array().items(Joi.string().valid(...AMENITIES)),
+  connectivity: Joi.array().items(Joi.string().valid(...CONNECTIVITY)),
+  nearbyFacilities: Joi.array().items(Joi.string().valid(...NEARBY_FACILITIES)),
+  location: locationSchema,
   rentalDetails: rentalDetailsSchema.allow(null),
   saleDetails: saleDetailsSchema.allow(null),
 };
@@ -126,7 +126,16 @@ const applyListingTypeRules = (value, helpers) => {
 };
 
 // ─── Create Property Validator ──────────────────────────────────────────────
-const createOwnerPropertySchema = Joi.object(basePropertySchema)
+const createOwnerPropertySchema = Joi.object({
+  ...basePropertySchema,
+  area: basePropertySchema.area.default({ unit: 'sqft' }),
+  fomoEnabled: basePropertySchema.fomoEnabled.default(true),
+  securityFeatures: basePropertySchema.securityFeatures.default([]),
+  amenities: basePropertySchema.amenities.default([]),
+  connectivity: basePropertySchema.connectivity.default([]),
+  nearbyFacilities: basePropertySchema.nearbyFacilities.default([]),
+  location: basePropertySchema.location.default({}),
+})
   .custom(applyListingTypeRules, 'Listing type conditional validation')
   .messages({ 'any.custom': '{{#message}}' });
 

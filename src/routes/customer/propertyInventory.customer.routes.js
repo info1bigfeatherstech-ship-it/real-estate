@@ -18,6 +18,9 @@ router.use(authenticateCustomer);
 // ─── Summary ────────────────────────────────────────────────────────────────
 router.get('/summary', inventoryController.getInventorySummary);
 
+// ─── Get Master Items for Customer Dropdowns ────────────────────────────────
+router.get('/master-items', inventoryController.getMasterItems);
+
 // ─── Get Inventory by Property ID ──────────────────────────────────────────
 router.get(
   '/property/:propertyId',

@@ -112,6 +112,15 @@ const getInventorySummary = asyncHandler(async (req, res) => {
   });
 });
 
+// ─── Get Master Items for Dropdowns ─────────────────────────────────────────
+const getMasterItems = asyncHandler(async (req, res) => {
+  const items = await propertyInventoryService.getMasterItems();
+  return ApiResponse.success(res, {
+    message: 'Master inventory items fetched successfully',
+    data: items,
+  });
+});
+
 module.exports = {
   getInventoryByPropertyId,
   getInventoryItem,
@@ -120,4 +129,5 @@ module.exports = {
   deleteInventoryItem,
   deletePropertyInventory,
   getInventorySummary,
+  getMasterItems,
 };

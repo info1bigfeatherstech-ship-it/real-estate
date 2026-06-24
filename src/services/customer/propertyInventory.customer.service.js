@@ -254,6 +254,11 @@ const getInventorySummary = async (customerId) => {
   };
 };
 
+// ─── Get Active Master Inventory Items ──────────────────────────────────────
+const getMasterItems = async () => {
+  return InventoryItem.find({ isActive: true, isDeleted: false }).sort({ name: 1 });
+};
+
 module.exports = {
   getInventoryByPropertyId,
   getInventoryItemById,
@@ -262,4 +267,5 @@ module.exports = {
   deleteInventoryItem,
   deletePropertyInventory,
   getInventorySummary,
+  getMasterItems,
 };

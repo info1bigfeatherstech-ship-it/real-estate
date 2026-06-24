@@ -60,34 +60,46 @@ const getPropertyFOMO = async (propertyId) => {
     }).then((sessions) => sessions.length),
   ]);
 
+  // Apply mock overrides if present
+  const finalActiveViewers = property.fomoMockViewers !== null && property.fomoMockViewers !== undefined
+    ? property.fomoMockViewers
+    : activeViewers;
+
+  const finalTodayViews = property.fomoMockViews !== null && property.fomoMockViews !== undefined
+    ? property.fomoMockViews
+    : todayViews;
+
+  const finalTotalViews = finalTodayViews > totalViews ? finalTodayViews : totalViews;
+  const finalUniqueViews = finalActiveViewers > uniqueViews ? finalActiveViewers : uniqueViews;
+
   // Format messages
   let activeViewersMessage = null;
-  if (activeViewers > 0) {
-    if (activeViewers === 1) {
+  if (finalActiveViewers > 0) {
+    if (finalActiveViewers === 1) {
       activeViewersMessage = '1 person is viewing this property right now';
     } else {
-      activeViewersMessage = `${activeViewers} people are viewing this property right now`;
+      activeViewersMessage = `${finalActiveViewers} people are viewing this property right now`;
     }
   }
 
   let todayViewsMessage = null;
-  if (todayViews > 0) {
-    if (todayViews === 1) {
+  if (finalTodayViews > 0) {
+    if (finalTodayViews === 1) {
       todayViewsMessage = '1 person viewed this property today';
     } else {
-      todayViewsMessage = `${todayViews} people viewed this property today`;
+      todayViewsMessage = `${finalTodayViews} people viewed this property today`;
     }
   }
 
   return {
     propertyId,
     propertyTitle: property.title,
-    activeViewers,
+    activeViewers: finalActiveViewers,
     activeViewersMessage,
-    todayViews,
+    todayViews: finalTodayViews,
     todayViewsMessage,
-    totalViews,
-    uniqueViews,
+    totalViews: finalTotalViews,
+    uniqueViews: finalUniqueViews,
   };
 };
 /**

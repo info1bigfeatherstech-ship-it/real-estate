@@ -445,6 +445,14 @@ fomoEnabled: {
   type: Boolean,
   default: true,      // ✅ Enabled by default
 },
+fomoMockViewers: {
+  type: Number,
+  default: null,
+},
+fomoMockViews: {
+  type: Number,
+  default: null,
+},
     maintenance: { type: Number, min: 0, default: null },
     bedrooms: { type: Number, min: 0, default: null },
     bathrooms: { type: Number, min: 0, default: null },
