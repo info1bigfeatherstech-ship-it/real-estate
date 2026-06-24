@@ -58,7 +58,7 @@ const buildViewFilter = ({ search, propertyId, viewerType, fromDate, toDate }) =
 };
 
 /**
- * Get property view stats — ✅ FIXED
+ * Get property view stats 
  */
 const getPropertyViewStats = async (propertyId) => {
   const property = await Property.findOne({
@@ -70,7 +70,7 @@ const getPropertyViewStats = async (propertyId) => {
     throw AppError.notFound('Property not found');
   }
 
-  // ✅ FIX 1: Convert string ID to ObjectId for aggregation
+  //Convert string ID to ObjectId for aggregation
   const objectId = new mongoose.Types.ObjectId(propertyId);
 
   const [totalViews, uniqueViews, viewsLast7Days, viewsLast30Days, viewerBreakdown] =
@@ -89,7 +89,7 @@ const getPropertyViewStats = async (propertyId) => {
         viewedAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
         isDeleted: false,
       }),
-      // ✅ FIX: Use ObjectId in aggregation pipeline
+      // Use ObjectId in aggregation pipeline
       PropertyView.aggregate([
         { $match: { propertyId: objectId, isDeleted: false } },
         { $group: { _id: '$viewerType', count: { $sum: 1 } } },
@@ -148,17 +148,16 @@ const getAllPropertiesViewStats = async () => {
 };
 
 /**
- * Get viewers list for a property — ✅ FIXED
+ * Get viewers list for a property 
  */
 const getPropertyViewers = async (propertyId, { page = 1, limit = 20 } = {}) => {
   const skip = (page - 1) * limit;
 
-  // ✅ FIX 2: Remove viewerName: { $ne: null } filter
   // Show ALL viewers including guests (without name)
   const viewers = await PropertyView.find({
     propertyId,
     isDeleted: false,
-    // viewerName: { $ne: null }, // ← REMOVED
+    // viewerName: { $ne: null }, 
   })
     .sort({ viewedAt: -1 })
     .skip(skip)
@@ -182,6 +181,7 @@ const getPropertyViewers = async (propertyId, { page = 1, limit = 20 } = {}) => 
     },
   };
 };
+
 
 module.exports = {
   getAllViews,
