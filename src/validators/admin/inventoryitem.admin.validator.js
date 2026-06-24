@@ -1,5 +1,5 @@
+// src/validators/admin/inventoryitem.admin.validator.js
 const Joi = require('joi');
-const { INVENTORY_CATEGORIES } = require('../../constants/tenantEnums');
 
 // ─── Create Inventory Item Validator ──────────────────────────────────────
 const createInventoryItemSchema = Joi.object({
@@ -13,11 +13,14 @@ const createInventoryItemSchema = Joi.object({
       'string.min': 'Item name must be at least 2 characters',
       'string.max': 'Item name cannot exceed 100 characters',
     }),
-  category: Joi.string()
-    .valid(...INVENTORY_CATEGORIES)
-    .default('Other')
+  categoryId: Joi.string()
+    .hex()
+    .length(24)
+    .required()
     .messages({
-      'any.only': 'Invalid category. Allowed: Furniture, Appliance, Key, Accessory, Other',
+      'string.hex': 'Invalid category ID format',
+      'string.length': 'Invalid category ID format',
+      'any.required': 'Category ID is required',
     }),
 });
 
@@ -31,10 +34,12 @@ const updateInventoryItemSchema = Joi.object({
       'string.min': 'Item name must be at least 2 characters',
       'string.max': 'Item name cannot exceed 100 characters',
     }),
-  category: Joi.string()
-    .valid(...INVENTORY_CATEGORIES)
+  categoryId: Joi.string()
+    .hex()
+    .length(24)
     .messages({
-      'any.only': 'Invalid category. Allowed: Furniture, Appliance, Key, Accessory, Other',
+      'string.hex': 'Invalid category ID format',
+      'string.length': 'Invalid category ID format',
     }),
   isActive: Joi.boolean(),
 })
@@ -53,10 +58,10 @@ const listInventoryItemsQuerySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).max(100).default(20),
   search: Joi.string().trim().max(200).allow(''),
-  category: Joi.string().valid(...INVENTORY_CATEGORIES).allow(''),
+  categoryId: Joi.string().hex().length(24).allow(''), // ← Also update here
   isActive: Joi.boolean().allow(''),
   sortBy: Joi.string()
-    .valid('name', 'category', 'createdAt', 'updatedAt')
+    .valid('name', 'categoryId', 'createdAt', 'updatedAt')
     .default('name'),
   sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
 });
