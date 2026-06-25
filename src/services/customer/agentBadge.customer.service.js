@@ -53,7 +53,8 @@ const incrementDealCount = async (agentId, { propertyId, dealType = 'rent' }) =>
   // Validate agent exists and is an agent
   const agent = await Customer.findOne({
     _id: agentId,
-    accountType: { $in: ['agent', 'owner'] },
+    // accountType: { $in: ['agent', 'owner'] },
+    accountType: 'agent',
     isActive: true,
   });
 

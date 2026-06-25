@@ -130,6 +130,7 @@ agentBadgeSchema.statics.incrementDeals = async function (agentId, dealType = 'r
   }
 
   await agentBadge.updateBadge();
+   await agentBadge.save();
   return agentBadge;
 };
 

@@ -13,6 +13,7 @@ const propertyViewRoutes = require('./propertyView.admin.routes');
 const reportRoutes = require('./report.routes');
 const generalInquiryRoutes = require('./generalInquiry.admin.routes');
 const badgeConfigRoutes = require('./badgeConfig.admin.routes');
+const socialLinkRoutes = require('./socialLink.admin.routes');
 const { authenticate } = require('../../middlewares/auth.middleware');
 const { requireAdmin } = require('../../middlewares/admin.middleware');
 
@@ -33,5 +34,6 @@ router.use('/views', authenticate, requireAdmin, propertyViewRoutes);
 router.use('/reports', authenticate, requireAdmin, reportRoutes);
 router.use('/general-inquiries', authenticate, requireAdmin, generalInquiryRoutes);
 router.use('/badges', authenticate, requireAdmin, badgeConfigRoutes);
+router.use('/social-links', authenticate, requireAdmin, socialLinkRoutes);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const fomoRoutes = require('./fomo.routes');
 const accommodationInquiryRoutes = require('./accommodationInquiry.user.routes');
 const propertyViewRoutes = require('./propertyView.user.routes');
 const generalInquiryRoutes = require('./generalInquiry.user.routes'); 
+const socialLinkRoutes = require('./socialLink.user.routes');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.use('/fomo', fomoRoutes);
 router.use('/elite-services', eliteServiceRoutes);
 router.use('/accommodation-inquiries', accommodationInquiryRoutes);
 router.use('/general-inquiries', generalInquiryRoutes);
-
+router.use('/social', socialLinkRoutes);
 
 
 module.exports = router;
