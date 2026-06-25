@@ -12,6 +12,7 @@ const inventoryCategoryRoutes = require('./inventoryCategory.admin.routes');
 const propertyViewRoutes = require('./propertyView.admin.routes');
 const reportRoutes = require('./report.routes');
 const generalInquiryRoutes = require('./generalInquiry.admin.routes');
+const badgeConfigRoutes = require('./badgeConfig.admin.routes');
 const { authenticate } = require('../../middlewares/auth.middleware');
 const { requireAdmin } = require('../../middlewares/admin.middleware');
 
@@ -31,6 +32,6 @@ router.use('/inventory-categories', authenticate, requireAdmin, inventoryCategor
 router.use('/views', authenticate, requireAdmin, propertyViewRoutes);
 router.use('/reports', authenticate, requireAdmin, reportRoutes);
 router.use('/general-inquiries', authenticate, requireAdmin, generalInquiryRoutes);
-
+router.use('/badges', authenticate, requireAdmin, badgeConfigRoutes);
 
 module.exports = router;

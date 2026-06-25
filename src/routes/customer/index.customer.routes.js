@@ -6,6 +6,7 @@ const propertyInventoryRoutes = require('./propertyInventory.customer.routes');
 const tenantEntryRoutes = require('./tenantEntry.customer.routes');
 const tenantExitRoutes = require('./tenantExit.customer.routes');
 const keyManagementRoutes = require('./keyManagement.routes');
+const agentBadgeRoutes = require('./agentBadge.customer.routes');
 
 const router = express.Router();
 
@@ -16,6 +17,6 @@ router.use('/inventory', propertyInventoryRoutes);
 router.use('/tenants', tenantEntryRoutes);
 router.use('/exits', tenantExitRoutes);
 router.use('/keys', keyManagementRoutes);
-
+router.use('/agent', agentBadgeRoutes);
 
 module.exports = router;

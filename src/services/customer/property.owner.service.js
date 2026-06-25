@@ -110,6 +110,7 @@ const updateProperty = async (customerId, propertyId, data) => {
 };
 
 // ─── Update Property Status ──────────────────────────────────────────────
+// ─── Update Property Status ──────────────────────────────────────────────
 const updatePropertyStatus = async (customerId, propertyId, status) => {
   const property = await Property.findOne({
     _id: propertyId,
@@ -124,6 +125,10 @@ const updatePropertyStatus = async (customerId, propertyId, status) => {
     throw AppError.forbidden(`Cannot set status to "${status}". Only admin can approve/reject.`);
   }
 
+  // ✅ Check if this is a deal completion
+  const dealStatuses = ['rented', 'occupied', 'sold'];
+  const isDealComplete = dealStatuses.includes(status) && property.status !== status;
+
   if (property.status === 'pending' || property.status === 'rejected') {
     throw AppError.forbidden(`Cannot change status of ${property.status} property. Wait for admin approval.`);
   }
@@ -132,6 +137,20 @@ const updatePropertyStatus = async (customerId, propertyId, status) => {
   property.lastUpdatedBy = customerId;
   property.updatedByModel = 'Customer';
   await property.save();
+
+  // ✅ Increment agent deal count if deal is complete
+  if (isDealComplete) {
+    try {
+      const agentBadgeService = require('./agentBadge.customer.service');
+      await agentBadgeService.incrementDealCount(customerId, {
+        propertyId,
+        dealType: status === 'sold' ? 'sale' : 'rent',
+      });
+    } catch (error) {
+      console.error('Failed to update agent badge:', error);
+      // Don't fail the request, just log
+    }
+  }
 
   return property.populate(populateFields);
 };
