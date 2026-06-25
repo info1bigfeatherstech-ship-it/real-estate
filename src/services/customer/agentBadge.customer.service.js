@@ -71,11 +71,10 @@ const getLeaderboard = async (limit = 50) => {
   return leaderboard;
 };
 
-// ─── Get Badge History ─────────────────────────────────────────────────────
 const getBadgeHistory = async (agentId) => {
   const agentBadge = await AgentBadge.findOne({ agentId });
   if (!agentBadge) {
-    throw AppError.notFound('No badge history found for this agent');
+    return [];
   }
   return agentBadge.badgeHistory || [];
 };

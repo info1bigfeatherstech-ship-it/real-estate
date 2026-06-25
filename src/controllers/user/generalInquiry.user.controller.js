@@ -15,15 +15,16 @@ const createInquiry = asyncHandler(async (req, res) => {
 
   const inquiry = await generalInquiryService.createInquiry(req.body, ipInfo);
 
-  return ApiResponse.created(res, {
-    message: 'Inquiry submitted successfully. We will get back to you soon.',
-    data: {
+  return ApiResponse.created(
+    res,
+    'Inquiry submitted successfully. We will get back to you soon.',
+    {
       id: inquiry._id,
       fullName: inquiry.fullName,
       status: inquiry.status,
       createdAt: inquiry.createdAt,
-    },
-  });
+    }
+  );
 });
 
 /**
