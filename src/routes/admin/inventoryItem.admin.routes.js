@@ -9,7 +9,7 @@ const {
   toggleInventoryItemStatusSchema,
   listInventoryItemsQuerySchema,
   inventoryItemIdParamSchema,
-} = require('../../validators/admin/inventoryItem.admin.validator');
+} = require('../../validators/admin/inventoryitem.admin.validator');
 
 const router = express.Router();
 
