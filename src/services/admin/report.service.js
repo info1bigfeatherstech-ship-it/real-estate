@@ -1,5 +1,5 @@
 const Property = require('../../models/Property.model');
-const PropertyView = require('../../models/PropertyView.model');
+const PropertyView = require('../../models/propertyView.model');
 const Inquiry = require('../../models/Inquiry.model');
 const Customer = require('../../models/Customer.model');
 const { parsePagination, buildPaginationMeta } = require('../../utils/pagination');

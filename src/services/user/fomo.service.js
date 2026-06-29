@@ -1,4 +1,4 @@
-const PropertyView = require('../../models/PropertyView.model');
+const PropertyView = require('../../models/propertyView.model');
 const Property = require('../../models/Property.model');
 const Inquiry = require('../../models/Inquiry.model');
 const AppError = require('../../errors/AppError');
