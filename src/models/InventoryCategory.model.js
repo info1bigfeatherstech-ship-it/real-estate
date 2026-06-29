@@ -49,7 +49,6 @@ const inventoryCategorySchema = new mongoose.Schema(
   }
 );
 
-inventoryCategorySchema.index({ name: 1 });
 inventoryCategorySchema.index({ isActive: 1, isDefault: 1 });
 
 inventoryCategorySchema.query.notDeleted = function notDeleted() {
