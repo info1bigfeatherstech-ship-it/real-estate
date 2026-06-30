@@ -4,6 +4,7 @@ const eliteServiceEnums = require('./eliteServiceEnums');
 const accommodationInquiryEnums = require('./accommodationInquiryEnums');
 const indianStateCodes = require('./indianStateCodes');
 const tenantEnums = require('./tenantEnums');
+const inquiryEnums = require('./inquiryEnums');
 
 
 module.exports = {
@@ -12,5 +13,6 @@ module.exports = {
   ...eliteServiceEnums,
   ...accommodationInquiryEnums,
   ...indianStateCodes,
-   ...tenantEnums
+  ...tenantEnums,
+  // ...inquiryEnums
 };

@@ -127,16 +127,25 @@ const getInquiryById = async (inquiryId) => {
   return toLegacyAccommodationInquiry(inquiry);
 };
 
-const updateInquiryStatus = async (inquiryId, { status, adminNotes }, userId) => {
+const updateInquiryStatus = async (inquiryId, updates, userId) => {
+  const allowed = [
+    'status',
+    'priority',
+    'assignedTo',
+    'adminNotes',
+    'internalRemarks',
+    'followUpNotes',
+    'inquirySource',
+  ];
+
   const update = {
-    status,
     lastStatusUpdatedAt: new Date(),
     lastStatusUpdatedBy: userId,
   };
 
-  if (adminNotes !== undefined) {
-    update.adminNotes = adminNotes || null;
-  }
+  allowed.forEach((key) => {
+    if (updates[key] !== undefined) update[key] = updates[key] || null;
+  });
 
   const inquiry = await Inquiry.findOneAndUpdate(
     { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' }, formType: FORM_TYPE },
@@ -148,10 +157,27 @@ const updateInquiryStatus = async (inquiryId, { status, adminNotes }, userId) =>
   return toLegacyAccommodationInquiry(inquiry);
 };
 
-const updateInquiryNotes = async (inquiryId, { adminNotes }, userId) => {
+const updateInquiryNotes = async (inquiryId, updates, userId) => {
+  const allowed = [
+    'priority',
+    'assignedTo',
+    'adminNotes',
+    'internalRemarks',
+    'followUpNotes',
+    'inquirySource',
+  ];
+
+  const update = {
+    lastStatusUpdatedBy: userId,
+  };
+
+  allowed.forEach((key) => {
+    if (updates[key] !== undefined) update[key] = updates[key] || null;
+  });
+
   const inquiry = await Inquiry.findOneAndUpdate(
     { _id: inquiryId, isDeleted: false, status: { $ne: 'draft' }, formType: FORM_TYPE },
-    { adminNotes: adminNotes || null, lastStatusUpdatedBy: userId },
+    update,
     { new: true, runValidators: true }
   ).populate(populateFields);
 

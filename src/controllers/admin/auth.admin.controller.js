@@ -9,6 +9,8 @@ const {
   getRefreshTokenFromRequest,
 } = require('../../utils/authCookie');
 
+const User = require('../../models/User.model');
+
 const login = asyncHandler(async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login(req.body);
 
@@ -48,4 +50,9 @@ const getMe = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, { message: 'Profile fetched successfully', data: user });
 });
 
-module.exports = { login, refreshToken, logout, getMe };
+const listUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({ isActive: true }).select('_id name email role');
+  return ApiResponse.success(res, { message: 'Users listed successfully', data: users });
+});
+
+module.exports = { login, refreshToken, logout, getMe, listUsers };

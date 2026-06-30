@@ -70,9 +70,10 @@ const getPropertyById = async (customerId, propertyId) => {
 
 // ─── Create Property ──────────────────────────────────────────────────────
 const createProperty = async (customerId, data) => {
+  const status = data.status === 'draft' ? 'draft' : 'pending';
   const property = await Property.create({
     ...data,
-    status: 'pending',
+    status,
     createdBy: customerId,
     createdByModel: 'Customer',
     lastUpdatedBy: customerId,

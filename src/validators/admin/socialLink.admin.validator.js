@@ -21,7 +21,7 @@ const createSocialLinkSchema = Joi.object({
     .valid(...SOCIAL_PLATFORMS)
     .required()
     .messages({
-      'any.only': 'Invalid platform. Allowed: facebook, instagram, youtube, linkedin, twitter, whatsapp, tiktok, pinterest, telegram, other',
+      'any.only': 'Invalid platform. Allowed: facebook, instagram, youtube, linkedin, twitter, whatsapp, tiktok, pinterest, telegram, google, other',
       'any.required': 'Platform is required',
     }),
   label: Joi.string().trim().max(50).allow('', null),

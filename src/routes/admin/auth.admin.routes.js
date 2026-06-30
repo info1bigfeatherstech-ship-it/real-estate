@@ -25,5 +25,6 @@ router.use(authenticate, requireAdmin);
 
 router.post('/logout', authController.logout);
 router.get('/me', authController.getMe);
+router.get('/users', authController.listUsers);
 
 module.exports = router;

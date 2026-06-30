@@ -25,11 +25,21 @@ const listAccommodationInquiriesQuerySchema = Joi.object({
 
 const updateAccommodationInquiryStatusSchema = Joi.object({
   status: Joi.string().valid(...ADMIN_INQUIRY_STATUSES).required(),
+  priority: Joi.string().valid('high', 'medium', 'low'),
+  assignedTo: Joi.string().hex().length(24).allow(null),
   adminNotes: Joi.string().trim().max(2000).allow('', null),
+  internalRemarks: Joi.string().trim().max(2000).allow('', null),
+  followUpNotes: Joi.string().trim().max(2000).allow('', null),
+  inquirySource: Joi.string().valid('website', 'mobile_app', 'whatsapp', 'phone_call', 'walk_in', 'facebook', 'instagram', 'google_ads', 'referral', 'broker', 'other'),
 });
 
 const updateAccommodationInquirySchema = Joi.object({
+  priority: Joi.string().valid('high', 'medium', 'low'),
+  assignedTo: Joi.string().hex().length(24).allow(null),
   adminNotes: Joi.string().trim().max(2000).allow('', null),
+  internalRemarks: Joi.string().trim().max(2000).allow('', null),
+  followUpNotes: Joi.string().trim().max(2000).allow('', null),
+  inquirySource: Joi.string().valid('website', 'mobile_app', 'whatsapp', 'phone_call', 'walk_in', 'facebook', 'instagram', 'google_ads', 'referral', 'broker', 'other'),
 }).min(1);
 
 const accommodationInquiryIdParamSchema = Joi.object({
