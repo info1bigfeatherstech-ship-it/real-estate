@@ -60,34 +60,32 @@ const getPropertyFOMO = async (propertyId) => {
     }).then((sessions) => sessions.length),
   ]);
 
-  // Apply mock overrides if present
-  const finalActiveViewers = property.fomoMockViewers !== null && property.fomoMockViewers !== undefined
-    ? property.fomoMockViewers
-    : activeViewers;
+  // Apply mock overrides for stats; user-facing messages only when admin set mock values
+  const hasMockViewers = property.fomoMockViewers !== null && property.fomoMockViewers !== undefined;
+  const hasMockViews = property.fomoMockViews !== null && property.fomoMockViews !== undefined;
 
-  const finalTodayViews = property.fomoMockViews !== null && property.fomoMockViews !== undefined
-    ? property.fomoMockViews
-    : todayViews;
+  const finalActiveViewers = hasMockViewers ? property.fomoMockViewers : activeViewers;
+  const finalTodayViews = hasMockViews ? property.fomoMockViews : todayViews;
 
   const finalTotalViews = finalTodayViews > totalViews ? finalTodayViews : totalViews;
   const finalUniqueViews = finalActiveViewers > uniqueViews ? finalActiveViewers : uniqueViews;
 
-  // Format messages
+  // Real view counts are admin-only — seekers see messages only from mock values
   let activeViewersMessage = null;
-  if (finalActiveViewers > 0) {
-    if (finalActiveViewers === 1) {
+  if (hasMockViewers && property.fomoMockViewers > 0) {
+    if (property.fomoMockViewers === 1) {
       activeViewersMessage = '1 person is viewing this property right now';
     } else {
-      activeViewersMessage = `${finalActiveViewers} people are viewing this property right now`;
+      activeViewersMessage = `${property.fomoMockViewers} people are viewing this property right now`;
     }
   }
 
   let todayViewsMessage = null;
-  if (finalTodayViews > 0) {
-    if (finalTodayViews === 1) {
+  if (hasMockViews && property.fomoMockViews > 0) {
+    if (property.fomoMockViews === 1) {
       todayViewsMessage = '1 person viewed this property today';
     } else {
-      todayViewsMessage = `${finalTodayViews} people viewed this property today`;
+      todayViewsMessage = `${property.fomoMockViews} people viewed this property today`;
     }
   }
 
