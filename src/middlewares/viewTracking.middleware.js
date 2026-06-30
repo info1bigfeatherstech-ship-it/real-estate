@@ -1,4 +1,4 @@
-const PropertyView = require('../models/PropertyView.model');
+const PropertyView = require('../models/propertyView.model');
 
 /**
  * Extract client IP from request

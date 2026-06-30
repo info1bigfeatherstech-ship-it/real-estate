@@ -1,4 +1,4 @@
-const KeyMovement = require('../../models/KeyMovement.model');
+const KeyMovement = require('../../models/keyMovement.model');
 const Property = require('../../models/Property.model');
 const Customer = require('../../models/Customer.model');
 const AppError = require('../../errors/AppError');

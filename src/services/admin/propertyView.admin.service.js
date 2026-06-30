@@ -1,5 +1,5 @@
 const mongoose = require('mongoose'); // ← ADD THIS
-const PropertyView = require('../../models/PropertyView.model');
+const PropertyView = require('../../models/propertyView.model');
 const Property = require('../../models/Property.model');
 const AppError = require('../../errors/AppError');
 const { parsePagination, buildPaginationMeta } = require('../../utils/pagination');

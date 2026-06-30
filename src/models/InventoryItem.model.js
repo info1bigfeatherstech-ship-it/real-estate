@@ -51,7 +51,6 @@ const inventoryItemSchema = new mongoose.Schema(
   }
 );
 
-inventoryItemSchema.index({ name: 1 });
 inventoryItemSchema.index({ categoryId: 1, isActive: 1 });
 
 // ─── Pre-save: Auto-populate categoryName ────────────────────────────────
