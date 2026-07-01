@@ -14,5 +14,17 @@ module.exports = {
   ...accommodationInquiryEnums,
   ...indianStateCodes,
   ...tenantEnums,
-  // ...inquiryEnums
+  ...inquiryEnums,
+
+  // ── Restore: property enums jo inquiryEnums ne overwrite kar diye ──
+  LISTING_TYPES: propertyEnums.LISTING_TYPES,
+  OWNERSHIP_TYPES: propertyEnums.OWNERSHIP_TYPES,
+  LEGAL_DOCUMENT_TYPES: propertyEnums.LEGAL_DOCUMENT_TYPES,
+  FACING_DIRECTIONS: propertyEnums.FACING_DIRECTIONS,
+
+  // ── Inquiry-specific enums with unique names (no clash) ──
+  INQUIRY_LISTING_TYPES: inquiryEnums.LISTING_TYPES,
+  INQUIRY_OWNERSHIP_TYPES: inquiryEnums.OWNERSHIP_TYPES,
+  INQUIRY_LEGAL_DOCUMENT_TYPES: inquiryEnums.LEGAL_DOCUMENT_TYPES,
+  INQUIRY_FACING_DIRECTIONS: inquiryEnums.FACING_DIRECTIONS,
 };
